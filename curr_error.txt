@@ -1,0 +1,17 @@
+
+src/pages/QuackzultingPage.tsx:71:15 - error TS2741: Property 'senderUid' is missing in type '{ coupleId: string; senderName: string; mode: "quackzulting"; msgId: string; role: "user" | "dr_kwuk"; content: string; emotionalReflection?: string; suggestedActions?: string[]; issueClassification?: string; timestamp: number; hintLevel?: number; }' but required in type 'ChatMessage'.
+
+71               message={{
+                 ~~~~~~~
+
+  src/types/index.ts:26:3
+    26   senderUid: string
+         ~~~~~~~~~
+    'senderUid' is declared here.
+  src/components/ChatBubble.tsx:4:3
+    4   message: ChatMessage;
+        ~~~~~~~
+    The expected type comes from property 'message' which is declared here on type 'IntrinsicAttributes & ChatBubbleProps'   
+
+
+Found 1 error.
