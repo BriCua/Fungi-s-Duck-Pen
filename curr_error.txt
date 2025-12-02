@@ -1,17 +1,9 @@
-
-src/pages/QuackzultingPage.tsx:71:15 - error TS2741: Property 'senderUid' is missing in type '{ coupleId: string; senderName: string; mode: "quackzulting"; msgId: string; role: "user" | "dr_kwuk"; content: string; emotionalReflection?: string; suggestedActions?: string[]; issueClassification?: string; timestamp: number; hintLevel?: number; }' but required in type 'ChatMessage'.
-
-71               message={{
-                 ~~~~~~~
-
-  src/types/index.ts:26:3
-    26   senderUid: string
-         ~~~~~~~~~
-    'senderUid' is declared here.
-  src/components/ChatBubble.tsx:4:3
-    4   message: ChatMessage;
-        ~~~~~~~
-    The expected type comes from property 'message' which is declared here on type 'IntrinsicAttributes & ChatBubbleProps'   
-
-
-Found 1 error.
+index-CojuxWlW.js:23 Uncaught FirebaseError: Firebase: Error (auth/invalid-api-key).
+    at zn (index-CojuxWlW.js:23:24100)
+    at O (index-CojuxWlW.js:23:24148)
+    at Ie.instanceFactory (index-CojuxWlW.js:23:107049)
+    at Re.getOrInitializeService (index-CojuxWlW.js:23:7796)
+    at Re.initialize (index-CojuxWlW.js:23:7204)
+    at gi (index-CojuxWlW.js:23:62394)
+    at _s (index-CojuxWlW.js:23:107983)
+    at index-CojuxWlW.js:38:34588

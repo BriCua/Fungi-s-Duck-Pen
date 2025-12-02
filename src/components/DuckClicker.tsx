@@ -4,8 +4,21 @@ import duckImage2 from '../assets/images/bebekz-2.webp'
 import './DuckClicker.css'
 import { SoundButton } from './ui/SoundButton';
 
+const quacks = [
+  "Quackz!",
+  "Quackkk!!!",
+  "quacks?",
+  "Qweeekk!",
+  "Quackers!",
+  "Quack.",
+  "Quack...",
+  "Quack Quack",
+  "Quack Attack!"
+];
+
 const DuckClicker = () => {
   const [quackCount, setQuackCount] = useState(0)
+  const [buttonText, setButtonText] = useState("Quackz!");
   const [isScaled, setIsScaled] = useState(false)
   const [isAltImage, setIsAltImage] = useState(false)
   const [isMuted, setIsMuted] = useState(false);
@@ -33,7 +46,7 @@ const DuckClicker = () => {
       isAnimatingRef.current = false;
       setIsScaled(false);
       setIsAltImage(false);
-    }, 800); // 0.8s is the duration of spin-smooth
+    }, 800); // 0.s is the duration of spin-smooth
   }
 
   const handleButtonQuack = () => {
@@ -51,6 +64,14 @@ const DuckClicker = () => {
       }
       img.addEventListener('animationend', handler)
     }
+
+    let newQuack = buttonText;
+    while (newQuack === buttonText) {
+      const randomIndex = Math.floor(Math.random() * quacks.length);
+      newQuack = quacks[randomIndex];
+    }
+    setButtonText(newQuack);
+
     setQuackCount(prev => prev + 1)
     if (!isMuted) {
       // Create new audio instance for spammable playback
@@ -73,15 +94,18 @@ const DuckClicker = () => {
           borderRadius: '16px',
           border: '3px solid #FFD580',
           padding: '32px',
-          maxWidth: '400px',
+          width: '95dvw',
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
-          gap: '24px',
+          gap: '',
         }}
       >
         <div className="absolute top-4 right-4">
           <SoundButton isMuted={isMuted} onToggle={toggleMute} />
+        </div>
+        <div className='text-5xl font-bold drop-shadow-lg text-[#F2AE27] font-baloo2'>
+          {quackCount} <span className='text-3xl'>Quacks!</span>
         </div>
         
         {/* Duck Image - Click to spin */}
@@ -111,12 +135,9 @@ const DuckClicker = () => {
         {/* Quack Counter Button */}
         <button
           onClick={handleButtonQuack}
-          className="focus:outline-none font-bold text-lg px-8 py-3 rounded-full transition-all duration-200 
-                     text-white border-2 border-white bg-vibrant-orange
-                     shadow-xl active:scale-95 active:bg-contrast-pink
-                     focus:ring-2 focus:ring-white "
+          className="quack-button-3d"
         >
-          Quackz quacked : {quackCount}
+          {buttonText}
         </button>
       </div>
     </div>

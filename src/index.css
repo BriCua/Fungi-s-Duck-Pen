@@ -1,4 +1,6 @@
+@import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@400..800&family=Fredoka:wght@300..700&family=Fresca&display=swap');
 @import "tailwindcss";
+
 
 @theme{
     --color-vibrant-orange:#FF8C42;
@@ -8,4 +10,11 @@
     --color-duck-yellow-light:#FFF8DC;
     --color-pond-blue:#4A90E2;
     --color-contrast-pink: #ed5a7c;
+    --font-fredoka: 'Fredoka';
+    --font-fresca: 'Fresca';
+    --font-baloo2: 'Baloo 2';
+}
+
+body {
+  font-family: var(--font-fresca);
 }

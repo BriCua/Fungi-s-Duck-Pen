@@ -23,3 +23,67 @@
   50% { filter: drop-shadow(0 0 15px rgba(255, 199, 0, 1)); } /* duck-yellow-dark */
   100% { filter: drop-shadow(0 0 5px rgba(255, 199, 0, 0.7)); } /* duck-yellow-dark */
 }
+
+/* 3D Button Styles */
+.quack-button-3d {
+  --text-color: #fff;
+  --shadow-color: #d35400;
+  --pink-shadow: #c23556;
+
+
+  position: relative;
+  font-family: var(--font-baloo2);
+  border: none;
+  background: var(--color-vibrant-orange);
+  color: var(--text-color);
+  padding: 1rem 1.75rem;
+  text-shadow: 0 0 4px #dddddd, 0 2px 16px #eeeeee55;
+  font-weight:bold;
+  font-size: 1.5rem;
+  text-transform: uppercase;
+  transition: 0.1s;
+  border-radius: 9999px;
+  letter-spacing: 1px;
+  box-shadow: 0 10px 0 var(--shadow-color);
+  transform: translateY(0);
+  width: 85%;
+  margin-top: 6px;
+}
+
+.quack-button-3d:active {
+  transform: translateY(5px);
+  background-color: var(--color-contrast-pink);
+  box-shadow: 0 3px 0 var(--pink-shadow);
+  text-shadow: 0 0 4px #fff, 0 2px 16px #ffffffAA;
+  transition: 0.1s;
+}
+
+
+
+/* CORRECT EXAMPLE
+button {
+  --bg: #e74c3c;
+  --text-color: #fff;
+  position: relative;
+  width: 150px;
+  border: none;
+  background: var(--bg);
+  color: var(--text-color);
+  padding: 1em;
+  font-weight: bold;
+  text-transform: uppercase;
+  transition: 0.2s;
+  border-radius: 5px;
+  opacity: 0.8;
+  letter-spacing: 1px;
+  box-shadow: #c0392b 0px 7px 2px, #000 0px 8px 5px;
+}
+
+button:hover {
+  opacity: 1;
+}
+
+button:active {
+  top: 4px;
+  box-shadow: #c0392b 0px 3px 2px,#000 0px 3px 5px;
+} */
