@@ -6,10 +6,12 @@ import {
   GoogleAuthProvider,
   signOut,
   onAuthStateChanged,
+  updateProfile,
   type User as FirebaseUser,
 } from 'firebase/auth'
 import { db } from './init'
-import { doc, setDoc, getDoc } from 'firebase/firestore'
+import { doc, setDoc, getDoc, updateDoc } from 'firebase/firestore'
+import type { User } from '../types'; // Import User type
 
 export const authService = {
   // Sign up with email/password
@@ -64,4 +66,37 @@ export const authService = {
   getCurrentUser(): FirebaseUser | null {
     return auth.currentUser
   },
+
+  // Get user profile by UID
+  async getUserProfile(uid: string): Promise<User | null> {
+    const userDocRef = doc(db, 'users', uid);
+    const userDoc = await getDoc(userDocRef);
+    if (userDoc.exists()) {
+      return userDoc.data() as User;
+    }
+    return null;
+  },
+
+  // Update user profile
+  async updateUserProfile(uid: string, displayName: string, birthdate: Date | undefined): Promise<void> {
+    const currentUser = auth.currentUser;
+    if (!currentUser || currentUser.uid !== uid) {
+      throw new Error("User not authenticated or UID mismatch.");
+    }
+
+    // 1. Update Firebase Auth profile
+    await updateProfile(currentUser, { displayName });
+
+    // 2. Update Firestore document (only update birthdate if provided)
+    const userDocRef = doc(db, 'users', uid);
+    const updatePayload: { [key: string]: any } = {
+      displayName,
+      updatedAt: Date.now(),
+    };
+    if (birthdate !== undefined) {
+      updatePayload.birthdate = birthdate.getTime(); // Store as timestamp
+    }
+    await updateDoc(userDocRef, updatePayload);
+  },
 }
+

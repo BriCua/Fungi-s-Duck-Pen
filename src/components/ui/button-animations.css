@@ -1,0 +1,31 @@
+@keyframes ripple-kf {
+  from {
+    transform: translate(-50%, -50%) scale(0);
+    opacity: 0.6;
+  }
+  to {
+    transform: translate(-50%, -50%) scale(3);
+    opacity: 0;
+  }
+}
+
+.btn-ripple {
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-ripple::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 100%;
+  padding-top: 100%; /* This creates a circle with a 1:1 aspect ratio */
+  border-radius: 50%;
+  background-color: white;
+  transform: translate(-50%, -50%) scale(0);
+}
+
+.btn-ripple:active::before {
+  animation: ripple-kf 0.5s ease-out;
+}

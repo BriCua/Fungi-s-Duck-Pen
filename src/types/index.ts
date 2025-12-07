@@ -4,6 +4,7 @@ export interface User {
   email: string
   displayName: string
   photoURL?: string
+  birthdate?: number
   coupleId?: string
   createdAt: number
   updatedAt: number
@@ -12,11 +13,22 @@ export interface User {
 // Couple types
 export interface Couple {
   coupleId: string
-  user1Uid: string
-  user2Uid: string
+  userIds: string[]
   createdAt: number
   inviteCode?: string
   inviteCodeExpiry?: number
+  relationshipStatus?: string
+  anniversary?: number
+  meetStory?: string
+  specialDates?: SpecialDate[]; // Added this line
+}
+
+// New type for SpecialDate
+export interface SpecialDate {
+  id: string;
+  name: string;
+  date: number; // Timestamp
+  recurring?: boolean;
 }
 
 // Chat types
@@ -94,6 +106,7 @@ export interface ButtonProps {
 }
 
 export interface InputProps {
+  id?: string
   type?: string
   placeholder?: string
   value?: string

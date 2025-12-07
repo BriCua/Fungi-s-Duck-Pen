@@ -34,6 +34,9 @@ export default {
 
       fontFamily: {
         sans: ['system-ui', 'sans-serif'],
+        fredoka: ['Fredoka', 'sans-serif'],
+        baloo2: ['"Baloo 2"', 'cursive'],
+        fresca: ['Fresca', 'cursive'],
       },
 
       fontSize: {

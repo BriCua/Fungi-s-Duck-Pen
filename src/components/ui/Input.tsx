@@ -1,6 +1,7 @@
 import type { InputProps } from '../../types'
 
 export const Input = ({
+  id,
   type = 'text',
   placeholder = '',
   value = '',
@@ -13,11 +14,12 @@ export const Input = ({
   return (
     <div className="flex flex-col gap-1 w-full">
       {label && (
-        <label className="text-xs font-semibold text-gray-700 uppercase tracking-wide">
+        <label htmlFor={id} className="text-xs font-semibold text-gray-700 uppercase tracking-wide">
           {label}
         </label>
       )}
       <input
+        id={id}
         type={type}
         placeholder={placeholder}
         value={value}

@@ -1,9 +1,3 @@
-index-CojuxWlW.js:23 Uncaught FirebaseError: Firebase: Error (auth/invalid-api-key).
-    at zn (index-CojuxWlW.js:23:24100)
-    at O (index-CojuxWlW.js:23:24148)
-    at Ie.instanceFactory (index-CojuxWlW.js:23:107049)
-    at Re.getOrInitializeService (index-CojuxWlW.js:23:7796)
-    at Re.initialize (index-CojuxWlW.js:23:7204)
-    at gi (index-CojuxWlW.js:23:62394)
-    at _s (index-CojuxWlW.js:23:107983)
-    at index-CojuxWlW.js:38:34588
+handleSaveSpecialDate called.
+ProfilePage.tsx:43 Couple object: {inviteCode: '8L4B52P4', meetStory: 'i dont know', createdBy: 'LvFIodskdSOYkjgA4GvktK2vk102', updatedAt: 1765021188031, anniversary: 1614618000000, …}
+ProfilePage.tsx:44 Couple ID: undefined

@@ -48,6 +48,7 @@
   transform: translateY(0);
   width: 85%;
   margin-top: 6px;
+  margin-bottom:8px;
 }
 
 .quack-button-3d:active {
@@ -86,4 +87,7 @@ button:hover {
 button:active {
   top: 4px;
   box-shadow: #c0392b 0px 3px 2px,#000 0px 3px 5px;
-} */
+} 
+
+
+*/

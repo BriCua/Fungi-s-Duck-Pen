@@ -1,1 +1,17 @@
 /* App-specific styles go here */
+.streaked{
+    text-shadow: 
+    0 0 2px white,
+    0 0 6px white;
+    color:white;
+    font-weight: 600;
+}
+
+.not-streaked{
+    color:#dddddd;
+    font-weight: 600;
+}
+
+.flame-glow{
+    filter: drop-shadow(0 0 2px rgba(255, 255, 255, 0.414)) drop-shadow(0 0 4px rgba(255, 255, 255, 0.253));
+}

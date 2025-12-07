@@ -2,24 +2,42 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
     
-    // Users - each user can read/write their own profile
+    // Users - each user can read/write their own profile, partners can read each other's profiles
     match /users/{uid} {
-      allow read: if request.auth.uid == uid;
-      allow create: if request.auth.uid == uid;
+      // Read is allowed if:
+      // 1. It's your own document.
+      // 2. The 'uid' you are trying to read is in the same couple as you.
+      allow read: if request.auth.uid == uid ||
+                   (exists(/databases/$(database)/documents/users/$(request.auth.uid)) &&
+                    uid in get(/databases/$(database)/documents/couples/$(get(/databases/$(database)/documents/users/$(request.auth.uid)).data.coupleId)).data.userIds);
+      
+      // You can only write to your own profile.
       allow write: if request.auth.uid == uid;
     }
     
-    // Couples - both members can access
+    // Couples - rules to allow reading for joins and writing to join
     match /couples/{coupleId} {
-      allow read: if request.auth.uid in resource.data.userIds;
+      // Any authenticated user can read couple docs to find one via invite code.
+      allow read: if request.auth != null;
+
+      // The creator's UID must be the first one in the userIds list upon creation.
       allow create: if request.auth.uid == request.resource.data.userIds[0];
-      allow write: if request.auth.uid in resource.data.userIds;
+
+      // An update is allowed if:
+      // 1. The requester is already a member (e.g., changing anniversary).
+      // 2. A new user is joining a non-full (1-person) couple.
+      allow update: if (request.auth.uid in resource.data.userIds) ||
+                       (resource.data.userIds.size() == 1 &&
+                        request.resource.data.userIds.size() == 2 &&
+                        request.auth.uid in request.resource.data.userIds);
+      
+      // Deleting couples is not allowed.
+      allow delete: if false;
     }
     
     // Chat messages - only couple members
     match /chats/{coupleId}/messages/{msgId} {
-      allow read: if request.auth.uid in get(/databases/$(database)/documents/couples/$(coupleId)).data.userIds;
-      allow create: if request.auth.uid in get(/databases/$(database)/documents/couples/$(coupleId)).data.userIds;
+      allow read, create: if request.auth.uid in get(/databases/$(database)/documents/couples/$(coupleId)).data.userIds;
       allow update, delete: if request.auth.uid == resource.data.senderUid;
     }
     
@@ -30,18 +48,25 @@ service cloud.firestore {
     
     // Notifications - user's own only
     match /notifications/{uid} {
-      allow read: if request.auth.uid == uid;
-      allow write: if request.auth.uid == uid;
+      allow read, write: if request.auth.uid == uid;
     }
     
     // Pond Memories - couple can access
     match /pondMemories/{coupleId}/{activityId} {
       allow read, write: if request.auth.uid in get(/databases/$(database)/documents/couples/$(coupleId)).data.userIds;
     }
-    
-    // Deny everything else
-    match /{document=**} {
-      allow read, write: if false;
+
+    // Quack Counts - users can only write their own, but can read their partner's.
+    match /quackCounts/{userId} {
+      // Read is allowed if:
+      // 1. It's your own document.
+      // 2. The 'userId' you are trying to read is in the same couple as you.
+      allow read: if request.auth.uid == userId ||
+                   (exists(/databases/$(database)/documents/users/$(request.auth.uid)) &&
+                    userId in get(/databases/$(database)/documents/couples/$(get(/databases/$(database)/documents/users/$(request.auth.uid)).data.coupleId)).data.userIds);
+      
+      // You can only write to your own quack count.
+      allow write: if request.auth.uid == userId;
     }
   }
 }

@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import "./App.css";
 import { Layout } from "./components/Layout";
 import { AuthPage } from "./pages/AuthPage";
@@ -5,9 +6,65 @@ import { CoupleLinkingPage } from "./pages/CoupleLinkingPage";
 import { useAuthContext } from "./context/AuthContext";
 import { Spinner } from "./components/ui";
 import DuckClicker from "./components/DuckClicker";
+import UserInfoModal, { type ProfileData } from "./components/UserInfoModal";
+import { authService } from "./firebase/authService";
+import { coupleService } from "./firebase/coupleService";
+import type { User } from "./types";
+import { ProfilePage } from "./pages/ProfilePage";
+import { Routes, Route, Navigate, Outlet } from "react-router-dom"; // Import Routes, Route, Navigate, Outlet
+import ProtectedRoute from "./components/ProtectedRoute"; // Import ProtectedRoute
 
 function AppContent() {
-  const { user, loading } = useAuthContext();
+  const { user, loading, setUser } = useAuthContext();
+  const [isUserInfoModalOpen, setIsUserInfoModalOpen] = useState(false);
+  const [hasSkippedProfile, setHasSkippedProfile] = useState(false);
+
+  useEffect(() => {
+    // Only check to show the modal if the user is past the couple linking stage.
+    if (user && user.coupleId && !user.birthdate && !hasSkippedProfile) {
+      setIsUserInfoModalOpen(true);
+    } else {
+      setIsUserInfoModalOpen(false);
+    }
+  }, [user, hasSkippedProfile]);
+
+  const handleProfileUpdate = async (data: ProfileData) => {
+    if (!user) return;
+    try {
+      // 1. Update user-specific info
+      // Only update if birthdate was provided, as displayName is always present.
+      if (data.birthdate) {
+        await authService.updateUserProfile(user.uid, data.displayName, data.birthdate);
+      }
+
+      // 2. Update couple-specific info
+      const { relationshipStatus, anniversary, meetStory } = data;
+      if (user.coupleId && (relationshipStatus || anniversary || meetStory)) {
+        await coupleService.updateCoupleDetails(user.coupleId, {
+          relationshipStatus,
+          anniversary: anniversary === null ? undefined : anniversary, // Convert null to undefined
+          meetStory,
+        });
+      }
+
+      // 3. Update local state to reflect changes and close modal
+      const updatedUser = {
+        ...user,
+        displayName: data.displayName || user.displayName,
+        birthdate: data.birthdate ? data.birthdate.getTime() : user.birthdate,
+      };
+      setUser(updatedUser as User);
+      setIsUserInfoModalOpen(false);
+
+    } catch (error) {
+      console.error("Failed to update profile:", error);
+    }
+  };
+
+  const handleSkipProfile = () => {
+    setIsUserInfoModalOpen(false);
+    setHasSkippedProfile(true);
+  };
 
   if (loading) {
     return (
@@ -17,18 +74,45 @@ function AppContent() {
     );
   }
 
-  if (!user) {
-    return <AuthPage />;
-  }
-
-  if (!user.coupleId) {
-    return <CoupleLinkingPage />;
-  }
-
+  // --- Routing Logic ---
   return (
-    <Layout>
-      <DuckClicker />
-    </Layout>
+    <>
+      <UserInfoModal
+        isOpen={isUserInfoModalOpen}
+        onClose={handleSkipProfile}
+        onSubmit={handleProfileUpdate}
+        initialDisplayName={user?.displayName || ''}
+        skipText="Skip for now"
+      />
+      <Routes>
+        {/* Auth Page - accessible only if not authenticated */}
+        <Route path="/auth" element={<ProtectedRoute isAuthPage><AuthPage /></ProtectedRoute>} />
+        
+        {/* Couple Linking Page - accessible if authenticated but no couple */}
+        <Route path="/link-couple" element={<ProtectedRoute requiresCoupleLinking><CoupleLinkingPage /></ProtectedRoute>} />
+
+        {/* Protected Routes - require authentication and coupleId */}
+        <Route path="/" element={<ProtectedRoute requiresAuthAndCouple />}>
+          <Route path="/" element={<Layout><DuckClicker /></Layout>} />
+          <Route path="/profile" element={<Layout><ProfilePage /></Layout>} />
+          {/* Add other protected routes here */}
+        </Route>
+
+        {/* Redirects or Fallback */}
+        <Route
+          path="*"
+          element={
+            !user ? (
+              <Navigate to="/auth" replace />
+            ) : !user.coupleId ? (
+              <Navigate to="/link-couple" replace />
+            ) : (
+              <Navigate to="/" replace />
+            )
+          }
+        />
+      </Routes>
+    </>
   );
 }
 

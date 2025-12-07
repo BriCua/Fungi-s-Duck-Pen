@@ -1,7 +1,8 @@
 import { useState } from 'react'
 import { Button, Input, Card } from '../components/ui'
-import { createCouple, joinCoupleByCode } from '../firebase/coupleService'
+import { coupleService } from '../firebase/coupleService'
 import { useAuthContext } from '../context/AuthContext'
+import bebekz1Image from '../assets/images/bebekz-1.webp'
 
 export const CoupleLinkingPage = () => {
   const { user, setUser, signOut } = useAuthContext()
@@ -22,7 +23,7 @@ export const CoupleLinkingPage = () => {
     setLoading(true)
     setError('');
     try {
-      const { inviteCode, coupleId } = await createCouple(user);
+      const { inviteCode, coupleId } = await coupleService.createCouple(user);
       setGeneratedCode(inviteCode);
       setNewCoupleId(coupleId);
       setCodeGenerated(true);
@@ -55,7 +56,7 @@ export const CoupleLinkingPage = () => {
     setLoading(true)
     setError('');
     try {
-      const { coupleId } = await joinCoupleByCode(coupleCode, user);
+      const { coupleId } = await coupleService.joinCoupleByCode(coupleCode, user);
       if (user) {
         setUser({ ...user, coupleId });
       }
@@ -65,6 +66,7 @@ export const CoupleLinkingPage = () => {
       setLoading(false)
     }
   }
+
 
   const handleSignOut = async () => {
     try {
@@ -77,11 +79,11 @@ export const CoupleLinkingPage = () => {
 
   if (mode === 'choose') {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-pond-blue-light via-soft-white to-duck-yellow-light flex flex-col items-center justify-center p-4">
+      <div className="min-h-screen bg-linear-to-br from-pond-blue-light via-soft-white to-duck-yellow-light flex flex-col items-center justify-center p-4">
         <Card className="w-full max-w-md">
           <div className="text-center space-y-6">
             <div>
-              <img src='src\assets\images\bebekz-1.webp' className="text-4xl mb-2" />
+              <img src={bebekz1Image} className="text-4xl mb-2" />
               <h1 className="text-2xl font-bold text-pond-blue mb-2">Link Your Partner</h1>
               <p className="text-gray-600 text-sm">Start your duck pen journey together</p>
             </div>
@@ -125,7 +127,7 @@ export const CoupleLinkingPage = () => {
 
   if (mode === 'create') {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-pond-blue-light via-soft-white to-duck-yellow-light flex items-center justify-center p-4">
+      <div className="min-h-screen bg-linear-to-br from-pond-blue-light via-soft-white to-duck-yellow-light flex items-center justify-center p-4">
         <Card className="w-full max-w-md">
           <div className="space-y-6">
             <div>
@@ -187,7 +189,7 @@ export const CoupleLinkingPage = () => {
 
   if (mode === 'join') {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-pond-blue-light via-soft-white to-duck-yellow-light flex items-center justify-center p-4">
+      <div className="min-h-screen bg-linear-to-br from-pond-blue-light via-soft-white to-duck-yellow-light flex items-center justify-center p-4">
         <Card className="w-full max-w-md">
           <div className="space-y-6">
             <div>
@@ -232,7 +234,7 @@ export const CoupleLinkingPage = () => {
               variant="primary"
               size="lg"
               onClick={handleJoinCouple}
-              disabled={coupleCode.length !== 6 || loading}
+              disabled={coupleCode.length !== 8 || loading}
               loading={loading}
               className="w-full"
             >

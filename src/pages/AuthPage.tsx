@@ -35,18 +35,17 @@ export const AuthPage = ({ onAuthSuccess }: AuthPageProps) => {
   }
 
   const handleGoogleSignIn = async () => {
-    setError('')
-    setLoading(true)
-
+    setError('');
     try {
-      await authService.signInWithGoogle()
-      onAuthSuccess?.()
+      await authService.signInWithGoogle();
+      onAuthSuccess?.();
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'An error occurred')
-    } finally {
-      setLoading(false)
+      // Ignore errors from the user closing the popup, as it's not a true failure.
+      if ((err as { code?: string }).code !== 'auth/popup-closed-by-user') {
+        setError(err instanceof Error ? err.message : 'An error occurred');
+      }
     }
-  }
+  };
 
   return (
     <div style={{
