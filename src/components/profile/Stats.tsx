@@ -2,16 +2,13 @@ import React, { useEffect, useState } from 'react';
 import { Card } from '../../components/ui';
 import { useAuthContext } from '../../context/AuthContext';
 import { subscribeToQuackCount } from '../../firebase/quackService';
-import { authService } from '../../firebase/authService';
-import type { User } from '../../types';
 
 interface StatsProps {}
 
 export const Stats: React.FC<StatsProps> = () => {
-  const { user, couple } = useAuthContext();
+  const { user, partner } = useAuthContext();
   const [myQuackz, setMyQuackz] = useState(0);
   const [partnerQuackz, setPartnerQuackz] = useState(0);
-  const [partnerUser, setPartnerUser] = useState<User | null>(null);
   const [streak, setStreak] = useState(0); 
 
   useEffect(() => {
@@ -21,30 +18,18 @@ export const Stats: React.FC<StatsProps> = () => {
     if (user?.uid) {
       unsubscribeMyQuackz = subscribeToQuackCount(user.uid, setMyQuackz);
     }
-
-    const fetchPartner = async () => {
-      if (couple?.userIds && user?.uid) {
-        const partnerId = couple.userIds.find((id) => id !== user.uid);
-        if (partnerId) {
-          unsubscribePartnerQuackz = subscribeToQuackCount(partnerId, setPartnerQuackz);
-          try {
-            const fetchedPartner = await authService.getUserProfile(partnerId);
-            setPartnerUser(fetchedPartner);
-          } catch (error) {
-            console.error("Failed to fetch partner's profile:", error);
-          }
-        }
-      }
-    };
     
-    fetchPartner();
+    if (partner?.uid) {
+      unsubscribePartnerQuackz = subscribeToQuackCount(partner.uid, setPartnerQuackz);
+    }
+
     setStreak(10); // Placeholder
 
     return () => {
       unsubscribeMyQuackz();
       unsubscribePartnerQuackz();
     };
-  }, [user, couple]);
+  }, [user, partner]);
 
   return (
     <div className="grid grid-cols-3 gap-4 mb-8">
@@ -65,7 +50,7 @@ export const Stats: React.FC<StatsProps> = () => {
         <span className="text-4xl mb-2">🦆</span>
         <p className="text-2xl font-bold text-white">{partnerQuackz}</p>
         <h3 className="text-xs font-semibold text-duck-yellow-light mt-1">
-          {partnerUser ? `${partnerUser.displayName}'s Quackz` : "Partner's Quackz"}
+          {partner ? `${partner.displayName}'s Quackz` : "Partner's Quackz"}
         </h3>
       </Card>
     </div>

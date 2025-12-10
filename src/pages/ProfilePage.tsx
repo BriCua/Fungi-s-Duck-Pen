@@ -13,7 +13,7 @@ import type { SpecialDate } from '../types';
 import { useNavigate } from 'react-router-dom'; // Import useNavigate
 
 export const ProfilePage: React.FC = () => {
-  const { user, couple, loading, signOut, setCouple } = useAuthContext();
+  const { couple, loading, signOut, setCouple } = useAuthContext();
   const [error, setError] = useState('');
   const navigate = useNavigate(); // Initialize useNavigate
 

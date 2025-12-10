@@ -1,5 +1,5 @@
-import React from 'react';
-import { Navigate, Outlet } from 'react-router-dom';
+import React, { type ReactNode } from 'react';
+import { Navigate } from 'react-router-dom';
 import { useAuthContext } from '../context/AuthContext';
 import { Spinner } from './ui';
 
@@ -10,12 +10,14 @@ interface ProtectedRouteProps {
   requiresCoupleLinking?: boolean;
   // If true, user must be authenticated AND have a coupleId (e.g., main app pages)
   requiresAuthAndCouple?: boolean;
+  children: ReactNode; // Add children prop
 }
 
 const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
   isAuthPage = false,
   requiresCoupleLinking = false,
   requiresAuthAndCouple = false,
+  children, // Destructure children
 }) => {
   const { user, loading } = useAuthContext();
 
@@ -35,7 +37,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
       }
       return <Navigate to="/" replace />;
     }
-    return <Outlet />; // Render AuthPage if not authenticated
+    return <>{children}</>; // Render children if not authenticated
   }
 
   // Logic for routes requiring authentication
@@ -48,7 +50,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
     if (user.coupleId) {
       return <Navigate to="/" replace />; // If user already has a couple, go to main
     }
-    return <Outlet />; // Render CoupleLinkingPage if authenticated but no couple
+    return <>{children}</>; // Render children if authenticated but no couple
   }
 
   // Logic for routes requiring authentication AND a coupleId
@@ -56,11 +58,11 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
     if (!user.coupleId) {
       return <Navigate to="/link-couple" replace />; // If no couple, go to couple linking
     }
-    return <Outlet />; // Render children if authenticated and has couple
+    return <>{children}</>; // Render children if authenticated and has couple
   }
 
   // Fallback, e.g., for a generic protected route that just needs auth
-  return <Outlet />;
+  return <>{children}</>;
 };
 
 export default ProtectedRoute;

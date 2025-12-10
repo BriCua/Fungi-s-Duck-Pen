@@ -132,4 +132,5 @@ export interface ModalProps {
   confirmText?: string
   cancelText?: string
   variant?: 'info' | 'warning' | 'danger'
+  isLoading?: boolean // Added isLoading prop
 }

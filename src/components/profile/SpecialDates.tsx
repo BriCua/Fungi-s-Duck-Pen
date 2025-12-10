@@ -1,6 +1,6 @@
 import React from 'react';
 import { Card, Button } from '../../components/ui';
-import type { Couple } from '../../types';
+import type { Couple, SpecialDate } from '../../types';
 
 interface SpecialDatesProps {
   couple: Couple | null;
@@ -60,7 +60,7 @@ export const SpecialDates: React.FC<SpecialDatesProps> = ({ couple, onAddSpecial
     dates.push({
       id: 'anniversary',
       name: 'Anniversary',
-      date: new Date(couple.anniversary),
+      date: couple.anniversary, // Use the number directly
       recurring: true,
     });
   }
@@ -70,13 +70,14 @@ export const SpecialDates: React.FC<SpecialDatesProps> = ({ couple, onAddSpecial
       dates.push({
         id: d.id,
         name: d.name,
-        date: new Date(d.date),
+        date: d.date, // Use the number directly
         recurring: d.recurring ?? true,
       })
     })
   }
 
-  const getUpcomingDate = (date: Date, recurring: boolean) => {
+  const getUpcomingDate = (timestamp: number, recurring: boolean) => {
+    const date = new Date(timestamp); // Convert timestamp to Date object
     if (!recurring) {
       return date;
     }
@@ -105,13 +106,13 @@ export const SpecialDates: React.FC<SpecialDatesProps> = ({ couple, onAddSpecial
             >
               <div>
                 <p className="font-semibold text-blue-700 text-lg font-baloo2">{item.name}</p>
-                <p className="text-gray-600">{item.date.toLocaleDateString()}</p>
+                <p className="text-gray-600">{new Date(item.date).toLocaleDateString()}</p>
                 {item.id === 'anniversary' && couple?.relationshipStatus && (
                   <p className="text-gray-500 text-sm mt-1">{couple.relationshipStatus}</p>
                 )}
               </div>
               <span className="absolute top-2 right-2 text-sm text-gray-500 bg-blue-50 px-2 py-1 rounded-full">
-                {getRelativeDateDescription(item.date, item.recurring ?? true)}
+                {getRelativeDateDescription(new Date(item.date), item.recurring ?? true)}
               </span>
             </button>
           ))

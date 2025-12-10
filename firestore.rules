@@ -47,8 +47,8 @@ service cloud.firestore {
     }
     
     // Notifications - user's own only
-    match /notifications/{uid} {
-      allow read, write: if request.auth.uid == uid;
+    match /notifications/{notificationId} {
+      allow read, write: if request.auth.uid == resource.data.uid;
     }
     
     // Pond Memories - couple can access

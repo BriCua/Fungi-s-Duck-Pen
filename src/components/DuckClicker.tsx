@@ -14,7 +14,7 @@ const quacks = [
   "Quack.", "Quack...", "Quack Quack", "Quack Attack!"
 ];
 
-const BATCH_INTERVAL = 5000; // 5 seconds
+const BATCH_INTERVAL = 2000; // 2 seconds
 
 // Key generator functions
 const getTotalKey = (uid: string) => `quackCount_${uid}`;

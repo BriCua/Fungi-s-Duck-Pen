@@ -1,35 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { useAuthContext } from '../../context/AuthContext';
-import { authService } from '../../firebase/authService';
-import type { User } from '../../types';
 
 interface AboutHeaderProps {}
 
 export const AboutHeader: React.FC<AboutHeaderProps> = () => {
-  const { user, couple } = useAuthContext();
-  const [partnerUser, setPartnerUser] = useState<User | null>(null);
-
-  useEffect(() => {
-    const fetchPartner = async () => {
-      if (user?.uid && couple?.userIds && couple.userIds.length > 1) {
-        const partnerId = couple.userIds.find((id) => id !== user.uid);
-        console.log('Partner ID:', partnerId); // Debugging
-        if (partnerId) {
-          try {
-            const fetchedPartner = await authService.getUserProfile(partnerId);
-            console.log('Fetched Partner:', fetchedPartner); // Debugging
-            setPartnerUser(fetchedPartner);
-          } catch (error) {
-            console.error("Failed to fetch partner's profile:", error); // Debugging
-          }
-        }
-      } else {
-        setPartnerUser(null);
-        console.log('No user, couple, or partner found'); // Debugging
-      }
-    };
-    fetchPartner();
-  }, [user, couple]);
+  const { user, partner } = useAuthContext();
 
   return (
     <div className="text-center mb-8">
@@ -46,7 +21,7 @@ export const AboutHeader: React.FC<AboutHeaderProps> = () => {
           <div className="w-16 h-16 bg-gray-300 rounded-full flex items-center justify-center text-gray-600 text-2xl font-bold mb-2">
             ?
           </div>
-          <p className="text-lg font-semibold text-pond-blue-dark">{partnerUser?.displayName || 'Partner'}</p>
+          <p className="text-lg font-semibold text-pond-blue-dark">{partner?.displayName || 'Partner'}</p>
         </div>
       </div>
     </div>

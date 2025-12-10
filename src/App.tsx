@@ -11,8 +11,9 @@ import { authService } from "./firebase/authService";
 import { coupleService } from "./firebase/coupleService";
 import type { User } from "./types";
 import { ProfilePage } from "./pages/ProfilePage";
-import { Routes, Route, Navigate, Outlet } from "react-router-dom"; // Import Routes, Route, Navigate, Outlet
+import { Routes, Route, Navigate } from "react-router-dom"; // Import Routes, Route, Navigate
 import ProtectedRoute from "./components/ProtectedRoute"; // Import ProtectedRoute
+import NotificationsPage from "./pages/NotificationsPage"; // Import NotificationsPage
 
 function AppContent() {
   const { user, loading, setUser } = useAuthContext();
@@ -92,11 +93,10 @@ function AppContent() {
         <Route path="/link-couple" element={<ProtectedRoute requiresCoupleLinking><CoupleLinkingPage /></ProtectedRoute>} />
 
         {/* Protected Routes - require authentication and coupleId */}
-        <Route path="/" element={<ProtectedRoute requiresAuthAndCouple />}>
-          <Route path="/" element={<Layout><DuckClicker /></Layout>} />
-          <Route path="/profile" element={<Layout><ProfilePage /></Layout>} />
-          {/* Add other protected routes here */}
-        </Route>
+        <Route path="/" element={<ProtectedRoute requiresAuthAndCouple><Layout><DuckClicker /></Layout></ProtectedRoute>} />
+        <Route path="/profile" element={<ProtectedRoute requiresAuthAndCouple><Layout><ProfilePage /></Layout></ProtectedRoute>} />
+        <Route path="/notifications" element={<ProtectedRoute requiresAuthAndCouple><Layout><NotificationsPage /></Layout></ProtectedRoute>} />
+
 
         {/* Redirects or Fallback */}
         <Route

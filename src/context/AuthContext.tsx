@@ -5,9 +5,11 @@ import type { User, Couple } from '../types'
 interface AuthContextType {
   user: User | null
   couple: Couple | null
+  partner: User | null; // Add partner to context
   loading: boolean
   setUser: (user: User | null) => void;
   setCouple: (couple: Couple | null) => void;
+  setPartner: (partner: User | null) => void;
   signIn: (email: string, password: string) => Promise<void>
   signUp: (email: string, password: string, displayName: string) => Promise<void>
   signInWithGoogle: () => Promise<void>
