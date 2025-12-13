@@ -56,6 +56,15 @@ service cloud.firestore {
       allow read, write: if request.auth.uid in get(/databases/$(database)/documents/couples/$(coupleId)).data.userIds;
     }
 
+    // Goals - only couple members
+    match /goals/{goalId} {
+        // A user can read, update, or delete a goal if they are a member of the couple associated with that goal.
+        allow read, update, delete: if request.auth.uid in get(/databases/$(database)/documents/couples/$(resource.data.coupleId)).data.userIds;
+
+        // A user can create a goal if they are a member of the couple they are assigning the goal to.
+        allow create: if request.auth.uid in get(/databases/$(database)/documents/couples/$(request.resource.data.coupleId)).data.userIds;
+    }
+
     // Quack Counts - users can only write their own, but can read their partner's.
     match /quackCounts/{userId} {
       // Read is allowed if:

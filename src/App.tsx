@@ -14,6 +14,7 @@ import { ProfilePage } from "./pages/ProfilePage";
 import { Routes, Route, Navigate } from "react-router-dom"; // Import Routes, Route, Navigate
 import ProtectedRoute from "./components/ProtectedRoute"; // Import ProtectedRoute
 import NotificationsPage from "./pages/NotificationsPage"; // Import NotificationsPage
+import GoalsPage from "./pages/GoalsPage"; // Import GoalsPage
 
 function AppContent() {
   const { user, loading, setUser } = useAuthContext();
@@ -22,12 +23,13 @@ function AppContent() {
 
   useEffect(() => {
     // Only check to show the modal if the user is past the couple linking stage.
-    if (user && user.coupleId && !user.birthdate && !hasSkippedProfile) {
+    const shouldOpen = (user && user.coupleId && !user.birthdate && !hasSkippedProfile);
+    if (shouldOpen && !isUserInfoModalOpen) {
       setIsUserInfoModalOpen(true);
-    } else {
+    } else if (!shouldOpen && isUserInfoModalOpen) {
       setIsUserInfoModalOpen(false);
     }
-  }, [user, hasSkippedProfile]);
+  }, [user, hasSkippedProfile, isUserInfoModalOpen]);
 
   const handleProfileUpdate = async (data: ProfileData) => {
     if (!user) return;
@@ -96,6 +98,7 @@ function AppContent() {
         <Route path="/" element={<ProtectedRoute requiresAuthAndCouple><Layout><DuckClicker /></Layout></ProtectedRoute>} />
         <Route path="/profile" element={<ProtectedRoute requiresAuthAndCouple><Layout><ProfilePage /></Layout></ProtectedRoute>} />
         <Route path="/notifications" element={<ProtectedRoute requiresAuthAndCouple><Layout><NotificationsPage /></Layout></ProtectedRoute>} />
+        <Route path="/goals" element={<ProtectedRoute requiresAuthAndCouple><Layout><GoalsPage /></Layout></ProtectedRoute>} />
 
 
         {/* Redirects or Fallback */}

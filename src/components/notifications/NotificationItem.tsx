@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { formatDistanceToNow } from 'date-fns';
 import type { Notification } from '../../types';
 import { useNotifications } from '../../hooks/useNotifications';
-import { Card } from '../ui/Card';
+
 import { notificationConfig } from '../../config/notification-config';
 
 interface NotificationItemProps {
@@ -26,7 +26,7 @@ const NotificationItem: React.FC<NotificationItemProps> = ({ notification }) => 
   };
 
   return (
-    <Card
+    <div
       onClick={handleClick}
       className={`p-4 rounded-lg shadow-md transition-all duration-200 cursor-pointer hover:shadow-lg hover:scale-[1.02] ${
         notification.read ? 'bg-base-200 text-base-content' : 'bg-base-100 text-base-content border-l-4 border-primary'
@@ -44,7 +44,7 @@ const NotificationItem: React.FC<NotificationItemProps> = ({ notification }) => 
           <p className="mt-1 text-sm">{notification.summary}</p>
         </div>
       </div>
-    </Card>
+    </div>
   );
 };
 

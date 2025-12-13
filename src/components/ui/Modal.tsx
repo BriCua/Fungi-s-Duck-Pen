@@ -22,7 +22,7 @@ export const Modal = ({
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
       <div className={`bg-white rounded-lg shadow-xl max-w-md w-full border-l-4 ${variantStyles[variant]}`}>
         <div className="p-6">
-          <h2 className="text-xl font-bold text-black mb-4">{title}</h2>
+          <h2 className="text-2xl font-semibold text-black mb-4 font-fredoka">{title}</h2>
           <div className="text-gray-700 mb-6">
             {children}
           </div>

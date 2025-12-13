@@ -1,8 +1,19 @@
-import { collection, query, where, onSnapshot, doc, updateDoc, getDocs, deleteDoc, orderBy, writeBatch } from 'firebase/firestore';
+import { collection, query, where, onSnapshot, doc, updateDoc, getDocs, deleteDoc, orderBy, addDoc, serverTimestamp, writeBatch } from 'firebase/firestore';
 import { db } from './init';
 import type { Notification } from '../types';
 
 export const notificationService = {
+  createNotification: async (uid: string, message: string, data?: Record<string, any>) => {
+    const notificationsRef = collection(db, 'notifications');
+    await addDoc(notificationsRef, {
+      uid,
+      message,
+      read: false,
+      timestamp: serverTimestamp(),
+      data: data || {},
+    });
+  },
+  
   /**
    * Subscribes to real-time notifications for a given user.
    * @param uid The user ID.

@@ -115,6 +115,7 @@ export interface InputProps {
   error?: string
   label?: string
   className?: string
+  onKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>) => void
 }
 
 export interface CardProps {

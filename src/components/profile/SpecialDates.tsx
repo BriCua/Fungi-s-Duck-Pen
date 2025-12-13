@@ -1,5 +1,5 @@
 import React from 'react';
-import { Card, Button } from '../../components/ui';
+import { Button } from '../../components/ui';
 import type { Couple, SpecialDate } from '../../types';
 
 interface SpecialDatesProps {
@@ -94,7 +94,7 @@ export const SpecialDates: React.FC<SpecialDatesProps> = ({ couple, onAddSpecial
   dates.sort((a, b) => getUpcomingDate(a.date, a.recurring ?? true).getTime() - getUpcomingDate(b.date, b.recurring ?? true).getTime());
 
   return (
-    <Card className="mb-8 p-6 bg-gradient-to-br from-blue-100 to-green-100 shadow-lg rounded-xl">
+    <div className="mb-8 p-6 bg-gradient-to-br from-blue-100 to-green-100 shadow-lg rounded-xl rounded-lg shadow">
       <h2 className="text-2xl font-bold text-center text-blue-800 mb-4 font-fredoka">Special Dates</h2>
       <div className="space-y-4">
         {dates.length > 0 ? (
@@ -125,6 +125,6 @@ export const SpecialDates: React.FC<SpecialDatesProps> = ({ couple, onAddSpecial
           Add Special Date
         </Button>
       </div>
-    </Card>
+    </div>
   );
 };

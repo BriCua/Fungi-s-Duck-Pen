@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Button, Input, Card } from '../components/ui'
+import { Button, Input } from '../components/ui'
 import { authService } from '../firebase/authService'
 import bebekz1Image from '../assets/images/bebekz-1.webp'
 
@@ -56,7 +56,7 @@ export const AuthPage = ({ onAuthSuccess }: AuthPageProps) => {
       justifyContent: 'center',
       padding: '16px',
     }}>
-      <Card className="w-full max-w-sm">
+      <div className="w-full max-w-sm rounded-lg shadow">
         {/* Header */}
         <div className="text-center mb-4">
           <img src={bebekz1Image} className="text-5xl mb-2" />
@@ -152,7 +152,7 @@ export const AuthPage = ({ onAuthSuccess }: AuthPageProps) => {
             </button>
           </p>
         </div>
-      </Card>
+      </div>
     </div>
   )
 }

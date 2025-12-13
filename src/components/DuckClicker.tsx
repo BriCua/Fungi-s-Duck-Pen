@@ -33,10 +33,11 @@ const DuckClicker = () => {
   const [isAltImage, setIsAltImage] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
   const [isSpinningGlow, setIsSpinningGlow] = useState(false);
+  const [isDuckAnimating, setIsDuckAnimating] = useState(false); // New state for animation
 
-  const isAnimatingRef = useRef(false);
   const duckImgRef = useRef<HTMLImageElement>(null);
   const audioRef = useRef<HTMLAudioElement>(null);
+  const isAnimatingRef = useRef(false);
 
   // Effect to manage all data loading and subscriptions
   useEffect(() => {
