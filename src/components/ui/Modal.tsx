@@ -1,3 +1,5 @@
+import  { useEffect } from 'react'; // Import useEffect
+import ReactDOM from 'react-dom'; // Import ReactDOM
 import type { ModalProps } from '../../types'
 
 export const Modal = ({
@@ -10,7 +12,17 @@ export const Modal = ({
   cancelText = 'Cancel',
   variant = 'info',
 }: ModalProps) => {
-  if (!isOpen) return null
+  useEffect(() => {
+    // Create element to portal into
+    const el = document.createElement('div');
+    document.body.appendChild(el);
+
+    return () => {
+      document.body.removeChild(el);
+    };
+  }, []);
+
+  if (!isOpen) return null;
 
   const variantStyles: Record<string, string> = {
     info: 'border-blue-500',
@@ -18,7 +30,7 @@ export const Modal = ({
     danger: 'border-red-500',
   }
 
-  return (
+  return ReactDOM.createPortal(
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
       <div className={`bg-white rounded-lg shadow-xl max-w-md w-full border-l-4 ${variantStyles[variant]}`}>
         <div className="p-6">
@@ -44,6 +56,7 @@ export const Modal = ({
           </div>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body // Render directly into body
   )
 }

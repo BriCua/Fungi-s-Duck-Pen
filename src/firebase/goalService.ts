@@ -9,7 +9,6 @@ import {
   where,
   Timestamp,
   serverTimestamp,
-  writeBatch,
 } from 'firebase/firestore';
 import { db } from './init';
 import { notificationService } from './notificationService';
@@ -74,7 +73,7 @@ export const sendNudgeNotification = async (
 ) => {
 
   const notificationData = {
-    type: 'nudge',
+    // type: 'nudge', // Removed, now passed as separate arg
     goalId,
     checklistItemId,
     nudgeMessage: message,
@@ -83,7 +82,9 @@ export const sendNudgeNotification = async (
 
   await notificationService.createNotification(
     recipientId,
+    'nudge', // type
     `${senderName} nudged you about: ${goalTitle}`,
+    message, // summary
     notificationData
   );
 };
@@ -98,14 +99,14 @@ export const sendNudgeResponseNotification = async (
 ) => {
     await notificationService.createNotification(
         recipientId,
-        `${senderName} responded to your nudge for "${goalTitle}": ${responseStatus}`
+        'nudge_response', // type
+        `${senderName} responded to your nudge for "${goalTitle}"`, // title
+        responseStatus // summary
     );
 };
 
 // 7. Update Checklist from Nudge Response
-export const updateChecklistFromNudge = async (goalId: string, checklistItemId: string | null) => {
-    const goalRef = doc(db, goalsCollection, goalId);
-    
+export const updateChecklistFromNudge = async () => {
     // This is tricky. We need to read the doc, update the checklist, and write it back.
     // This should be done in a transaction for safety.
     // For now, a simple update will be used. A more robust solution might be needed.

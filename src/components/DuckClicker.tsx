@@ -33,7 +33,6 @@ const DuckClicker = () => {
   const [isAltImage, setIsAltImage] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
   const [isSpinningGlow, setIsSpinningGlow] = useState(false);
-  const [isDuckAnimating, setIsDuckAnimating] = useState(false); // New state for animation
 
   const duckImgRef = useRef<HTMLImageElement>(null);
   const audioRef = useRef<HTMLAudioElement>(null);

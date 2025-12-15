@@ -1,65 +1,70 @@
 import { useState } from 'react';
 import { useGoals } from '../hooks/useGoals';
-import { useAuthContext } from '../context/AuthContext'; // Import useAuthContext
+import { useAuthContext } from '../context/AuthContext';
 import { Spinner } from '../components/ui';
 import GoalCard from '../components/goals/GoalCard';
 import AddGoalModal from '../components/goals/AddGoalModal';
+import { PageHeader } from '../components/ui/PageHeader';
+import type { Goal } from '../types/goals';
 
 const GoalsPage = () => {
-  const { personalGoals, coupleGoals, loading } = useGoals();
-  const { couple } = useAuthContext(); // Get couple from context
-  const [activeTab, setActiveTab] = useState<'personal' | 'couple'>('couple');
+  const { goals, loading } = useGoals();
+  const { user, couple, partner } = useAuthContext();
   const [isAddModalOpen, setAddModalOpen] = useState(false);
+  const [filter, setFilter] = useState<'all' | 'us' | 'my' | 'partner'>('all');
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
+
+  const filteredGoals = goals.filter(goal => {
+    if (filter === 'all') return true;
+    if (filter === 'us') return goal.type === 'us';
+    if (filter === 'my') return goal.type === 'personal' && goal.createdBy === user?.uid;
+    if (filter === 'partner') return goal.type === 'personal' && goal.createdBy === partner?.uid;
+    return true;
+  });
+
+  const getGoalOwnership = (goal: Goal) => {
+    if (goal.type === 'us') return 'our';
+    return goal.createdBy === user?.uid ? 'my' : 'partner';
+  };
+
+  const renderFilterButton = () => (
+    <div className="relative">
+      <button
+        onClick={() => setIsFilterOpen(!isFilterOpen)}
+        className="btn-ripple bg-white/30 backdrop-blur-xs rounded-2xl border border-white/40 shadow-lg px-3 py-2 font-semibold text-gray-500 w-12 h-12 flex items-center justify-center text-2xl relative"
+        aria-label="Filter quests"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+          <path fillRule="evenodd" d="M3 3a1 1 0 011-1h12a1 1 0 011 1v3a1 1 0 01-.293.707L12 11.414V15a1 1 0 01-.293.707l-2 2A1 1 0 018 17v-5.586L3.293 6.707A1 1 0 013 6V3z" clipRule="evenodd" />
+        </svg>
+      </button>
+      {isFilterOpen && (
+        <div className="absolute top-14 right-0 mt-2 w-56 bg-white rounded-lg shadow-xl z-10">
+          <button onClick={() => { setFilter('all'); setIsFilterOpen(false); }} className="block w-full text-left px-4 py-2 text-gray-800 hover:bg-gray-200">All Quests</button>
+          <button onClick={() => { setFilter('us'); setIsFilterOpen(false); }} className="block w-full text-left px-4 py-2 text-gray-800 hover:bg-gray-200">Our Quests</button>
+          <button onClick={() => { setFilter('my'); setIsFilterOpen(false); }} className="block w-full text-left px-4 py-2 text-gray-800 hover:bg-gray-200">My Quests</button>
+          {partner && (
+            <button onClick={() => { setFilter('partner'); setIsFilterOpen(false); }} className="block w-full text-left px-4 py-2 text-gray-800 hover:bg-gray-200">{`${partner.displayName}'s Quests`}</button>
+          )}
+        </div>
+      )}
+    </div>
+  );
 
   if (loading) {
     return <div className="flex justify-center items-center h-full"><Spinner /></div>;
   }
 
   return (
-    <div className="p-4 md:p-6 text-white font-baloo">
-      <h1 className="text-3xl font-bold mb-4 text-center font-fredoka">Duck Quests</h1>
-      
-      {/* Tabs */}
-      <div className="mb-4 flex justify-center">
-        <nav className="flex space-x-4">
-          <button
-            onClick={() => setActiveTab('couple')}
-            className={`px-4 py-2 rounded-lg font-semibold ${activeTab === 'couple' ? 'bg-yellow-400 text-gray-800' : 'bg-gray-700'}`}
-          >
-            Our Goals
-          </button>
-          <button
-            onClick={() => setActiveTab('personal')}
-            className={`px-4 py-2 rounded-lg font-semibold ${activeTab === 'personal' ? 'bg-yellow-400 text-gray-800' : 'bg-gray-700'}`}
-          >
-            Personal Goals
-          </button>
-        </nav>
-      </div>
+    <div className="font-baloo">
+      <PageHeader title="Duck Quests" rightAction={renderFilterButton()} />
 
-      {/* Content */}
-      <div>
-        {activeTab === 'couple' && (
-          <div>
-            {coupleGoals.length === 0 ? (
-              <p className="text-center text-gray-400">No shared goals yet. Create one together!</p>
-            ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {coupleGoals.map(goal => <GoalCard key={goal.id} goal={goal} />)}
-              </div>
-            )}
-          </div>
-        )}
-
-        {activeTab === 'personal' && (
-          <div>
-            {personalGoals.length === 0 ? (
-              <p className="text-center text-gray-400">No personal goals yet. Add something you're working on!</p>
-            ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {personalGoals.map(goal => <GoalCard key={goal.id} goal={goal} />)}
-              </div>
-            )}
+      <div className='p-6'>    
+        {filteredGoals.length === 0 ? (
+          <p className="text-center text-gray-400">No goals found for this filter.</p>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {filteredGoals.map(goal => <GoalCard key={goal.id} goal={goal} ownership={getGoalOwnership(goal)} />)}
           </div>
         )}
       </div>
@@ -67,7 +72,7 @@ const GoalsPage = () => {
       {/* FAB to add goal */}
       <button 
         onClick={() => setAddModalOpen(true)}
-        className="fixed bottom-20 right-6 bg-yellow-400 text-gray-800 p-4 rounded-full shadow-lg hover:bg-yellow-500 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:ring-opacity-75 disabled:bg-gray-400"
+        className=" bg-white/30 backdrop-blur-xs rounded-2xl border border-white/40 shadow-lg fixed bottom-8 right-6 text-gray-500 p-4 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:ring-opacity-75 disabled:bg-gray-400"
         aria-label="Add new goal"
         disabled={!couple} // Disable button if couple is not loaded
         >
@@ -75,7 +80,7 @@ const GoalsPage = () => {
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
         </svg>
       </button>
-
+      
       {isAddModalOpen && <AddGoalModal onClose={() => setAddModalOpen(false)} couple={couple} />}
     </div>
   );

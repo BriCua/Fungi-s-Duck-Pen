@@ -6,13 +6,12 @@ import {
   deleteGoal,
   sendNudgeNotification,
   sendNudgeResponseNotification,
-  updateChecklistFromNudge,
 } from '../firebase/goalService';
 import type { Goal } from '../types/goals';
 import { useAuthContext } from '../context/AuthContext';
 
 export const useGoals = () => {
-  const { user, couple } = useAuthContext();
+  const { couple } = useAuthContext();
   const [goals, setGoals] = useState<Goal[]>([]);
   const [loading, setLoading] = useState(true);
 

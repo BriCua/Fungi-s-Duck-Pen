@@ -102,14 +102,14 @@ const EditGoalModal = ({ goal, onClose }: EditGoalModalProps) => {
                 <button
                     type="button"
                     onClick={() => setType('us')}
-                    className={`px-4 py-2 text-sm font-semibold rounded-l-md transition-colors w-1/2 ${type === 'us' ? 'bg-yellow-400 text-gray-800' : 'bg-gray-200 text-gray-600'}`}
+                    className={`px-4 py-2 text-sm font-semibold rounded-l-md transition-colors w-1/2 ${type === 'us' ? 'bg-contrast-pink text-pink-50' : 'bg-gray-200 text-gray-600'}`}
                 >
                     For Us
                 </button>
                 <button
                     type="button"
                     onClick={() => setType('personal')}
-                    className={`px-4 py-2 text-sm font-semibold rounded-r-md transition-colors w-1/2 ${type === 'personal' ? 'bg-yellow-400 text-gray-800' : 'bg-gray-200 text-gray-600'}`}
+                    className={`px-4 py-2 text-sm font-semibold rounded-r-md transition-colors w-1/2 ${type === 'personal' ? 'bg-duck-yellow-dark text-duck-yellow-light' : 'bg-gray-200 text-gray-600'}`}
                 >
                     For Me
                 </button>

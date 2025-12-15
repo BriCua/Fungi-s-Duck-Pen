@@ -1,3 +1,7 @@
+:root {
+  --color-contrast-pink: #ed5a7c;
+}
+
 .scaled {
   transform: scale(1.1);
   transition: transform 0.1s ease-out;

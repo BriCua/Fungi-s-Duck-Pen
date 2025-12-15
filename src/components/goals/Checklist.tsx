@@ -4,9 +4,15 @@ import type { Goal, ChecklistItem } from '../../types/goals';
 
 interface ChecklistProps {
   goal: Goal;
+  cardTheme: {
+    titleColor: string;
+    textColor: string;
+    iconColor: string;
+    cardColor: string;
+  };
 }
 
-const Checklist = ({ goal }: ChecklistProps) => {
+const Checklist = ({ goal, cardTheme }: ChecklistProps) => {
   const { user } = useAuthContext();
   const { updateGoal } = useGoals();
 
@@ -35,9 +41,10 @@ const Checklist = ({ goal }: ChecklistProps) => {
             checked={item.completed}
             onChange={() => handleToggleChecklistItem(item)}
             disabled={isChecklistDisabled}
-            className="h-4 w-4 rounded border-gray-300 text-yellow-400 focus:ring-yellow-400 disabled:opacity-50"
+            className="h-4 w-4 rounded border-gray-300 focus:ring-yellow-400 disabled:opacity-50"
+            style={{ accentColor: cardTheme.iconColor }}
           />
-          <label className={`ml-3 block text-sm font-medium ${item.completed ? 'text-gray-500 line-through' : 'text-gray-300'}`}>
+          <label className={`ml-3 block text-sm font-medium ${item.completed ? 'line-through' : ''}`} style={{ color: cardTheme.textColor }}>
             {item.text}
           </label>
         </div>

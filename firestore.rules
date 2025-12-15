@@ -46,9 +46,11 @@ service cloud.firestore {
       allow read, write: if request.auth.uid == uid;
     }
     
-    // Notifications - user's own only
+    // Notifications - user can create their own or for their partner, and read their own.
     match /notifications/{notificationId} {
-      allow read, write: if request.auth.uid == resource.data.uid;
+      allow read, update, delete: if request.auth.uid == resource.data.uid;
+      allow create: if request.auth.uid == request.resource.data.uid ||
+                    (request.resource.data.uid in get(/databases/$(database)/documents/couples/$(get(/databases/$(database)/documents/users/$(request.auth.uid)).data.coupleId)).data.userIds);
     }
     
     // Pond Memories - couple can access

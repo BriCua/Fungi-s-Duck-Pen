@@ -6,17 +6,18 @@ import Checklist from './Checklist';
 import Nudge from './Nudge';
 import { useGoals } from '../../hooks/useGoals';
 import { Modal } from '../ui/Modal';
-import trashIcon from '../../assets/icons/trash-can.svg';
-import triangleIcon from '../../assets/icons/triangle-down.svg'; // Import triangle icon
 
 interface GoalCardProps {
   goal: Goal;
+  ownership: 'my' | 'partner' | 'our';
 }
 
-const GoalCard = ({ goal }: GoalCardProps) => {
+
+const GoalCard = ({ goal, ownership }: GoalCardProps) => {
   const [isEditModalOpen, setEditModalOpen] = useState(false);
   const [isDeleteModalOpen, setDeleteModalOpen] = useState(false);
   const [isExpanded, setExpanded] = useState(false);
+  const [isNudgeModalOpen, setIsNudgeModalOpen] = useState(false); // New state for Nudge modal
   const { deleteGoal } = useGoals();
 
   const calculateProgress = () => {
@@ -38,49 +39,100 @@ const GoalCard = ({ goal }: GoalCardProps) => {
     }
   };
 
+  let cardColor;
+  let titleColor;
+  let textColor;
+  let iconColor; // For the color value itself
+
+  switch (ownership) {
+    case 'my':
+      cardColor = 'var(--color-duck-yellow-dark)';
+      titleColor = 'var(--color-duck-yellow-light)';
+      textColor = 'var(--color-duck-yellow-light)';
+      iconColor = 'var(--color-duck-yellow-light)';
+      break;
+    case 'partner':
+      cardColor = 'var(--color-duck-yellow-subtle)';
+      titleColor = 'var(--color-white)';
+      textColor = 'var(--color-white)';
+      iconColor = 'var(--color-white)';
+      break;
+    case 'our':
+      cardColor = 'var(--color-contrast-pink)';
+      titleColor = 'var(--color-pink-50)';
+      textColor = 'var(--color-pink-50)';
+      iconColor = 'var(--color-pink-200)';
+      break;
+  }
+
+  // Define a theme object to pass to children if needed
+  const cardTheme = {
+    titleColor,
+    textColor,
+    iconColor,
+    cardColor,
+  };
 
   return (
     <>
-      <div className="bg-gray-800 p-4 rounded-lg shadow-md flex flex-col justify-between font-baloo">
+      <div 
+        className="p-4 rounded-lg shadow-md flex flex-col justify-between font-baloo"
+        style={{ backgroundColor: cardColor }}
+      >
         <div onClick={() => setExpanded(!isExpanded)} className="cursor-pointer">
           <div className="flex justify-between items-start">
             <div>
-              <h3 className="font-fredoka font-bold text-xl text-duck-yellow">{goal.title}</h3>
-              <p className="text-sm text-gray-400 mb-2">Due: {goal.dueDate.toDate().toLocaleDateString()}</p>
+              <h3 className="font-fredoka font-bold text-xl" style={{ color: titleColor }}>{goal.title}</h3>
+              <p className="text-md mb-2 font-baloo2" style={{ color: textColor }}>Due - {goal.dueDate.toDate().toLocaleDateString()}</p>
             </div>
             <div className="flex items-center space-x-2">
-              <button onClick={(e) => { e.stopPropagation(); setEditModalOpen(true); }} className="text-gray-400 hover:text-white">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                  <path d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z" />
-                  <path fillRule="evenodd" d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" clipRule="evenodd" />
-                </svg>
-              </button>
-              <button onClick={(e) => { e.stopPropagation(); setDeleteModalOpen(true); }} className="text-gray-400 hover:text-red-500">
-                <img src={trashIcon} alt="Delete" className="h-5 w-5" />
-              </button>
+              {ownership === 'partner' && ( // Nudge button for partner's goals
+                <button onClick={(e) => { e.stopPropagation(); setIsNudgeModalOpen(true); }} style={{ color: cardTheme.iconColor }}>
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                    <path fillRule="evenodd" d="M18 10c0 3.866-3.582 7-8 7a8.841 8.841 0 01-4.083-.986L2 17l1.338-3.123C2.547 11.92 2 10.054 2 10c0-3.866 3.582-7 8-7s8 3.134 8 7zM7 9H5v2h2V9zm8 0h-2v2h2V9zM9 9h2v2H9V9z" clipRule="evenodd" />
+                  </svg>
+                </button>
+              )}
+              {(ownership === 'my' || ownership === 'our') && ( // Edit button for my and our goals
+                <button onClick={(e) => { e.stopPropagation(); setEditModalOpen(true); }} style={{ color: cardTheme.iconColor }}>
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                    <path d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z" />
+                    <path fillRule="evenodd" d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" clipRule="evenodd" />
+                  </svg>
+                </button>
+              )}
+              {(ownership === 'my' || ownership === 'our') && ( // Delete button for my and our goals
+                <button onClick={(e) => { e.stopPropagation(); setDeleteModalOpen(true); }} style={{ color: cardTheme.iconColor }}>
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke={cardTheme.iconColor} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/>
+                  </svg>
+                </button>
+              )}
             </div>
           </div>
           <div>
-            {goal.details && <p className="text-sm text-gray-300 mb-1">{goal.details}</p>}
-            <div className="flex justify-start -ml-1.5"> {/* Container for the triangle, left-indented */}
-              <img 
-                src={triangleIcon} 
-                alt="Expand/Collapse" 
-                className={`w-7 h-7 transition-transform duration-300 ${isExpanded ? 'rotate-180' : ''}`} 
-              />
+            {goal.details && <p className="text-sm mb-1" style={{ color: textColor }}>{goal.details}</p>}
+            <div className="flex justify-start -ml-2.5"> {/* Container for the triangle, left-indented */}
+              <svg 
+                xmlns="http://www.w3.org/2000/svg" 
+                viewBox="0 0 24 24" 
+                className={`w-9 h-9 transition-transform duration-300 ${isExpanded ? 'rotate-180' : ''}`} 
+                style={{ fill: iconColor }}
+              >
+                <path d="M7 10l5 5 5-5z"/>
+              </svg>
             </div>
           </div>
         </div>
         
         {isExpanded && (
           <div className="mt-1">
-            {goal.checklist && goal.checklist.length > 0 && <Checklist goal={goal} />}
-            <Nudge goal={goal} />
+            {goal.checklist && goal.checklist.length > 0 && <Checklist goal={goal} cardTheme={cardTheme} />}
           </div>
         )}
 
         <div className="mt-2">
-          <ProgressBar percentage={calculateProgress()} />
+          <ProgressBar percentage={calculateProgress()} cardTheme={cardTheme} />
         </div>
 
         {isEditModalOpen && <EditGoalModal goal={goal} onClose={() => setEditModalOpen(false)} />}
@@ -97,6 +149,13 @@ const GoalCard = ({ goal }: GoalCardProps) => {
           <p>Are you sure you want to delete the quest: "{goal.title}"?</p>
           <p className="text-sm text-gray-500 mt-2">This action cannot be undone.</p>
         </Modal>
+      )}
+      {isNudgeModalOpen && (
+        <Nudge // Nudge will be repurposed as a modal
+          goal={goal}
+          isOpen={isNudgeModalOpen} // Corrected prop passing
+          onClose={() => setIsNudgeModalOpen(false)}
+        />
       )}
     </>
   );

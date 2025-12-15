@@ -10,12 +10,11 @@ import { AddSpecialDateModal } from '../components/profile/AddSpecialDateModal';
 import { UpdateSpecialDateModal } from '../components/profile/UpdateSpecialDateModal';
 import { EditFieldModal } from '../components/profile/EditFieldModal';
 import type { SpecialDate } from '../types';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate
+import { PageHeader } from '../components/ui/PageHeader';
 
 export const ProfilePage: React.FC = () => {
   const { couple, loading, signOut, setCouple } = useAuthContext();
   const [error, setError] = useState('');
-  const navigate = useNavigate(); // Initialize useNavigate
 
   // State for Add Modal
   const [isAddSpecialDateModalOpen, setIsAddSpecialDateModalOpen] = useState(false);
@@ -158,12 +157,10 @@ export const ProfilePage: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-duck-yellow-light via-soft-white to-pond-blue-light p-4">
-      <div className="max-w-xl mx-auto">
-        <button onClick={() => navigate('/')} className="text-pond-blue hover:underline mb-4">
-          &larr; Back to App
-        </button>
+    <div className="font-baloo">
+      <PageHeader title="About Us" />
 
+      <div className='p-6'>
         <AboutHeader />
 
         {error && <div className="mb-6 bg-red-100 text-red-700 p-3 rounded-md">{error}</div>}

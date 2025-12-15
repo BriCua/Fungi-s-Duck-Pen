@@ -7,70 +7,117 @@ import { Input } from '../ui/Input';
 
 interface NudgeProps {
   goal: Goal;
+  isOpen: boolean; // Controls modal visibility
+  onClose: () => void;
 }
 
-const Nudge = ({ goal }: NudgeProps) => {
+const Nudge = ({ goal, isOpen, onClose }: NudgeProps) => {
   const { user, partner } = useAuthContext();
   const { sendNudgeNotification } = useGoals();
-  const [nudgeModalOpen, setNudgeModalOpen] = useState(false);
   const [nudgeMessage, setNudgeMessage] = useState('');
-  const [nudgedChecklistItem, setNudgedChecklistItem] = useState<ChecklistItem | null>(null);
+  const [selectedChecklistItems, setSelectedChecklistItems] = useState<string[]>([]); // Store item IDs
+  const [selectAll, setSelectAll] = useState(false);
 
-  const openNudgeModal = (item: ChecklistItem | null) => {
-    setNudgedChecklistItem(item);
-    setNudgeModalOpen(true);
+  const handleToggleChecklistItem = (itemId: string) => {
+    setSelectedChecklistItems(prev =>
+      prev.includes(itemId) ? prev.filter(id => id !== itemId) : [...prev, itemId]
+    );
   };
 
-  const handleSendNudge = () => {
+  const handleSelectAll = () => {
+    if (selectAll) {
+      setSelectedChecklistItems([]);
+    } else {
+      setSelectedChecklistItems(goal.checklist.map(item => item.id));
+    }
+    setSelectAll(prev => !prev);
+  };
+
+  const handleSendNudge = async () => {
     if (!user || !partner) return;
 
-    sendNudgeNotification(
-      partner.uid,
-      user.displayName,
-      goal.id!,
-      goal.title,
-      nudgedChecklistItem?.id || null,
-      nudgeMessage || `Just checking in on this goal! ❤️`
-    );
-    setNudgeModalOpen(false);
+    let itemsToNudge: ChecklistItem[] = [];
+
+    if (selectAll) {
+      itemsToNudge = goal.checklist;
+    } else if (selectedChecklistItems.length > 0) {
+      itemsToNudge = goal.checklist.filter(item => selectedChecklistItems.includes(item.id));
+    }
+
+    if (itemsToNudge.length > 0) {
+      for (const item of itemsToNudge) {
+        await sendNudgeNotification(
+          partner.uid,
+          user.displayName,
+          goal.id!,
+          goal.title,
+          item.id,
+          nudgeMessage || `Just checking in on "${item.text}"! ❤️`
+        );
+      }
+    } else {
+      // Send a general nudge if no specific items are selected
+      await sendNudgeNotification(
+        partner.uid,
+        user.displayName,
+        goal.id!,
+        goal.title,
+        null, // No specific checklist item
+        nudgeMessage || `Just checking in on this goal! ❤️`
+      );
+    }
+
+    onClose();
     setNudgeMessage('');
+    setSelectedChecklistItems([]);
+    setSelectAll(false);
   };
-  
-  // A partner can only nudge on a personal goal of the other user
-  if (goal.type !== 'personal' || user?.uid === goal.createdBy) {
-    return null;
-  }
 
   return (
-    <div className="mt-4">
-        <h4 className="font-semibold text-sm text-gray-400 mb-2">Nudge your partner</h4>
-        <div className="space-y-2">
-            {goal.checklist.map(item => (
-                <div key={item.id} className="flex justify-between items-center">
-                    <span className="text-gray-300">{item.text}</span>
-                    <button onClick={() => openNudgeModal(item)} className="text-xs bg-yellow-400 text-gray-800 px-2 py-1 rounded-md">Nudge</button>
-                </div>
-            ))}
-            <button onClick={() => openNudgeModal(null)} className="w-full text-sm bg-gray-700 text-white px-3 py-2 rounded-md hover:bg-gray-600">Send a general nudge</button>
+    <Modal
+      isOpen={isOpen}
+      onClose={onClose}
+      onConfirm={handleSendNudge}
+      title={`Nudge Partner for "${goal.title}"`}
+      confirmText="Send Nudge"
+      isLoading={false} // Add loading state if needed for sending nudges
+    >
+      <div className="space-y-4">
+        <p className="text-gray-600">What do you want to nudge about?</p>
+        
+        <button
+          onClick={handleSelectAll}
+          className="w-full py-2 px-4 rounded-md text-sm font-semibold mb-4"
+          style={{ backgroundColor: selectAll ? 'var(--color-duck-yellow-dark)' : 'var(--color-duck-yellow-subtle)', color: 'rgb(50, 50, 50)' }}
+        >
+          {selectAll ? 'Deselect All' : 'Select All Items'}
+        </button>
+
+        <div className="space-y-2 max-h-48 overflow-y-auto pr-2"> {/* Scrollable checklist */}
+          {goal.checklist.map(item => (
+            <div key={item.id} className="flex items-center">
+              <input
+                type="checkbox"
+                id={`nudge-item-${item.id}`}
+                checked={selectedChecklistItems.includes(item.id) || selectAll}
+                onChange={() => handleToggleChecklistItem(item.id)}
+                className="h-4 w-4 rounded text-blue-600 focus:ring-blue-500" // Use a standard color
+              />
+              <label htmlFor={`nudge-item-${item.id}`} className="ml-3 text-sm text-gray-700">
+                {item.text}
+              </label>
+            </div>
+          ))}
         </div>
 
-        {nudgeModalOpen && (
-            <Modal
-                isOpen={true}
-                onClose={() => setNudgeModalOpen(false)}
-                onConfirm={handleSendNudge}
-                title={`Nudge for "${goal.title}"`}
-                confirmText="Send Nudge"
-            >
-                <Input
-                    label={`Optional message for ${nudgedChecklistItem ? `"${nudgedChecklistItem.text}"` : 'the goal'}`}
-                    value={nudgeMessage}
-                    onChange={(e) => setNudgeMessage(e.target.value)}
-                    placeholder="e.g., You've got this! ✨"
-                />
-            </Modal>
-        )}
-    </div>
+        <Input
+          label="Optional message"
+          value={nudgeMessage}
+          onChange={setNudgeMessage}
+          placeholder="e.g., You've got this! ✨"
+        />
+      </div>
+    </Modal>
   );
 };
 

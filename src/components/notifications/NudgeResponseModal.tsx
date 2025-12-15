@@ -1,4 +1,7 @@
+import { useState } from 'react';
 import { Modal } from '../ui/Modal';
+import { Button } from '../ui/Button';
+import { Textarea } from '../ui/Textarea';
 import { useAuthContext } from '../../context/AuthContext';
 import { useGoals } from '../../hooks/useGoals';
 import type { Notification } from '../../types';
@@ -11,30 +14,23 @@ interface NudgeResponseModalProps {
 const NudgeResponseModal = ({ notification, onClose }: NudgeResponseModalProps) => {
   const { user, partner } = useAuthContext();
   const { sendNudgeResponseNotification, updateChecklistFromNudge } = useGoals();
+  const [customResponse, setCustomResponse] = useState('');
 
   const handleResponse = async (response: string) => {
-    if (!user || !partner) return;
+    if (!user || !partner || !response.trim()) return;
 
     const { goalTitle, goalId, checklistItemId } = notification.data || {};
 
-    // 1. Send a notification back to the nudger
-    sendNudgeResponseNotification(partner.uid, user.displayName, goalTitle, response);
+    sendNudgeResponseNotification(partner.uid, user.displayName, goalTitle ?? '', response);
 
-    // 2. If the response is "Done!", update the checklist
     if (response === 'Done!' && goalId) {
-      // This is where we need the goal object to update the checklist.
-      // The `updateChecklistFromNudge` function in `goalService` is a placeholder.
-      // We will implement the logic here, where we have the `goals` from `useGoals`.
-      
-      // For now, let's call the placeholder and log a warning.
       updateChecklistFromNudge(goalId, checklistItemId || null);
-      console.log("Updating checklist for goal:", goalId, "item:", checklistItemId);
     }
 
     onClose();
   };
   
-  const responseOptions = ["On it!", "Almost done!", "Need help", "Done!"];
+  const responseOptions = ["Not quite yet...", "On it!", "Almost there!", "Done!"];
 
   return (
     <Modal
@@ -43,18 +39,34 @@ const NudgeResponseModal = ({ notification, onClose }: NudgeResponseModalProps) 
       title={`Response to nudge for "${notification.data?.goalTitle}"`}
     >
       <div className="space-y-4">
-        <p className="text-gray-600">Your partner asked: "{notification.data?.nudgeMessage}"</p>
-        <p className="font-semibold">How's it going?</p>
+        <p className="text-gray-600 font-baloo2">Your partner asked: "{notification.data?.nudgeMessage}"</p>
         <div className="grid grid-cols-2 gap-4">
           {responseOptions.map(option => (
-            <button
+            <Button
               key={option}
               onClick={() => handleResponse(option)}
-              className="p-4 bg-yellow-400 text-gray-800 font-semibold rounded-lg hover:bg-yellow-500 transition-colors"
+              variant="duckdark"
+              className="" 
             >
               {option}
-            </button>
+            </Button>
           ))}
+        </div>
+        <div className="pt-4 border-t border-gray-200">
+            <Textarea
+                placeholder="Or write a custom response..."
+                value={customResponse}
+                onChange={setCustomResponse}
+                rows={3}
+            />
+            <Button
+                onClick={() => handleResponse(customResponse)}
+                disabled={!customResponse.trim()}
+                variant="navy"
+                className="mt-2 w-full"
+            >
+                Send Custom Response
+            </Button>
         </div>
       </div>
     </Modal>

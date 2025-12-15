@@ -48,7 +48,7 @@ const AddGoalModal = ({ onClose, couple }: AddGoalModalProps) => {
       .filter(text => text.trim() !== '')
       .map(text => ({ id: `temp-${Math.random()}`, text, completed: false }));
 
-    const goalData: Omit<Goal, 'id', 'createdAt', 'updatedAt'> = {
+    const goalData: Omit<Goal, 'id' | 'createdAt' | 'updatedAt'> = {
       title,
       details,
       dueDate: Timestamp.fromDate(new Date(dueDate)),
