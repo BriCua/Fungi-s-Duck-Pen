@@ -6,7 +6,7 @@ import { CoupleLinkingPage } from "./pages/CoupleLinkingPage";
 import { useAuthContext } from "./context/AuthContext";
 import { Spinner } from "./components/ui";
 import DuckClicker from "./components/DuckClicker";
-import UserInfoModal, { type ProfileData } from "./components/UserInfoModal";
+import { UserInfoModal, type ProfileData } from "./components/UserInfoModal";
 import { authService } from "./firebase/authService";
 import { coupleService } from "./firebase/coupleService";
 import type { User } from "./types";
@@ -17,7 +17,7 @@ import NotificationsPage from "./pages/NotificationsPage"; // Import Notificatio
 import GoalsPage from "./pages/GoalsPage"; // Import GoalsPage
 
 function AppContent() {
-  const { user, loading, setUser } = useAuthContext();
+  const { user, loading, setUser, couple } = useAuthContext();
   const [isUserInfoModalOpen, setIsUserInfoModalOpen] = useState(false);
   const [hasSkippedProfile, setHasSkippedProfile] = useState(false);
 
@@ -42,7 +42,7 @@ function AppContent() {
 
       // 2. Update couple-specific info
       const { relationshipStatus, anniversary, meetStory } = data;
-      if (user.coupleId && (relationshipStatus || anniversary || meetStory)) {
+      if (user.coupleId && user.uid === couple?.createdBy && (relationshipStatus || anniversary || meetStory)) {
         await coupleService.updateCoupleDetails(user.coupleId, {
           relationshipStatus,
           anniversary: anniversary === null ? undefined : anniversary, // Convert null to undefined
@@ -86,6 +86,7 @@ function AppContent() {
         onSubmit={handleProfileUpdate}
         initialDisplayName={user?.displayName || ''}
         skipText="Skip for now"
+        isPartner={user?.uid !== couple?.createdBy}
       />
       <Routes>
         {/* Auth Page - accessible only if not authenticated */}

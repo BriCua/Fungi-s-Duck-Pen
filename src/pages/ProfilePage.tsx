@@ -54,9 +54,8 @@ export const ProfilePage: React.FC = () => {
     setAddSpecialDateError('');
 
     try {
-      await coupleService.addSpecialDate(couple.coupleId, name, date.getTime(), recurring);
+      const newSpecialDate = await coupleService.addSpecialDate(couple.coupleId, name, date.getTime(), recurring);
       
-      const newSpecialDate = { id: String(Date.now()), name, date: date.getTime(), recurring };
       const updatedSpecialDates = [...(couple.specialDates || []), newSpecialDate];
       setCouple({ ...couple, specialDates: updatedSpecialDates });
 
@@ -188,7 +187,7 @@ export const ProfilePage: React.FC = () => {
       <AddSpecialDateModal
         isOpen={isAddSpecialDateModalOpen}
         onClose={() => setIsAddSpecialDateModalOpen(false)}
-        onSave={(name, date) => handleSaveSpecialDate(name, date, true)} // By default, new dates are recurring
+        onSave={handleSaveSpecialDate}
         isLoading={isSavingSpecialDate}
         error={addSpecialDateError}
       />

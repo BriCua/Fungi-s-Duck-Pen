@@ -16,12 +16,22 @@ export const coupleService = {
     if (!user) throw new Error('User not authenticated');
 
     const inviteCode = generateInviteCode();
+    const specialDates = [];
+    if (user.birthdate) {
+      specialDates.push({
+        id: Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15),
+        name: `${user.displayName}'s Birthday`,
+        date: user.birthdate,
+        recurring: true,
+      });
+    }
+
     const coupleRef = await addDoc(collection(db, 'couples'), {
       inviteCode,
       createdBy: user.uid,
       createdAt: Timestamp.now(),
       userIds: [user.uid],
-      specialDates: [], // Initialize specialDates array
+      specialDates,
     });
 
     await updateDoc(doc(db, 'users', user.uid), {
@@ -52,8 +62,33 @@ export const coupleService = {
       throw new Error('You are already in this couple');
     }
 
+    const partnerId = coupleData.userIds[0];
+    const partnerDoc = await getDoc(doc(db, 'users', partnerId));
+    const partner = partnerDoc.data() as User;
+
+    const specialDates = coupleData.specialDates || [];
+
+    if (user.birthdate && !specialDates.some((d: SpecialDate) => d.name === `${user.displayName}'s Birthday`)) {
+      specialDates.push({
+        id: Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15),
+        name: `${user.displayName}'s Birthday`,
+        date: user.birthdate,
+        recurring: true,
+      });
+    }
+
+    if (partner.birthdate && !specialDates.some((d: SpecialDate) => d.name === `${partner.displayName}'s Birthday`)) {
+      specialDates.push({
+        id: Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15),
+        name: `${partner.displayName}'s Birthday`,
+        date: partner.birthdate,
+        recurring: true,
+      });
+    }
+
     await updateDoc(coupleDoc.ref, {
       userIds: arrayUnion(user.uid),
+      specialDates,
     });
 
     await updateDoc(doc(db, 'users', user.uid), {
@@ -112,6 +147,7 @@ export const coupleService = {
       specialDates: arrayUnion(newSpecialDate),
       updatedAt: Date.now(),
     });
+    return newSpecialDate;
   },
 
   updateSpecialDate: async (coupleId: string, updatedDate: SpecialDate) => {

@@ -5,7 +5,7 @@ import { useAuthContext } from '../context/AuthContext'
 import bebekz1Image from '../assets/images/bebekz-1.webp'
 
 export const CoupleLinkingPage = () => {
-  const { user, setUser, signOut } = useAuthContext()
+  const { user, setUser, signOut, setCouple } = useAuthContext()
   const [mode, setMode] = useState<'choose' | 'create' | 'join'>('choose')
   const [coupleCode, setCoupleCode] = useState('')
   const [loading, setLoading] = useState(false)
@@ -27,6 +27,8 @@ export const CoupleLinkingPage = () => {
       setGeneratedCode(inviteCode);
       setNewCoupleId(coupleId);
       setCodeGenerated(true);
+      const newCoupleData = await coupleService.getCoupleData(coupleId);
+      setCouple(newCoupleData);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An error occurred');
     } finally {
@@ -59,6 +61,8 @@ export const CoupleLinkingPage = () => {
       const { coupleId } = await coupleService.joinCoupleByCode(coupleCode, user);
       if (user) {
         setUser({ ...user, coupleId });
+        const newCoupleData = await coupleService.getCoupleData(coupleId);
+        setCouple(newCoupleData);
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An error occurred');
@@ -214,7 +218,7 @@ export const CoupleLinkingPage = () => {
                 disabled={loading}
               />
               <p className="text-xs text-gray-500 mt-2">
-                6-character code, uppercase (e.g., DUCK42)
+                8-character code, uppercase (e.g., 09DUCK42)
               </p>
             </div>
 

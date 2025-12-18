@@ -14,6 +14,7 @@ export interface User {
 export interface Couple {
   coupleId: string
   userIds: string[]
+  createdBy: string // Add this line
   createdAt: number
   inviteCode?: string
   inviteCodeExpiry?: number

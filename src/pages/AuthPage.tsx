@@ -60,8 +60,8 @@ export const AuthPage = ({ onAuthSuccess }: AuthPageProps) => {
         {/* Header */}
         <div className="text-center mb-4">
           <img src={bebekz1Image} className="text-5xl mb-2" />
-          <h1 className="text-2xl font-bold text-duck-yellow">Fungi's Duck Pen</h1>
-          <p className="text-gray-600 text-xs mt-1">Your relationship sanctuary</p>
+          <h1 className="text-2xl font-bold text-duck-yellow-light font-fredoka">Fungi's Duck Pen</h1>
+          <p className="text-gray-600 text-xs font-baloo2 mt-1">Your relationship sanctuary</p>
         </div>
 
         {/* Form */}
@@ -104,7 +104,7 @@ export const AuthPage = ({ onAuthSuccess }: AuthPageProps) => {
 
           <Button
             type="submit"
-            variant="primary"
+            variant="duckdark"
             size="lg"
             disabled={loading || !email || !password || (isSignUp && !displayName)}
             loading={loading}
