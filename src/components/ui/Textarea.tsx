@@ -1,8 +1,17 @@
-import type { InputProps } from '../../types'
+interface TextareaProps {
+  id?: string;
+  placeholder?: string;
+  value?: string;
+  onChange?: (value: string) => void;
+  disabled?: boolean;
+  error?: string;
+  label?: string;
+  className?: string;
+  rows?: number;
+}
 
-export const Input = ({
+export const Textarea = ({
   id,
-  type = 'text',
   placeholder = '',
   value = '',
   onChange,
@@ -10,8 +19,8 @@ export const Input = ({
   error = '',
   label = '',
   className = '',
-  onKeyDown,
-}: InputProps) => {
+  rows = 4,
+}: TextareaProps) => {
   return (
     <div className="flex flex-col gap-1 w-full">
       {label && (
@@ -19,14 +28,13 @@ export const Input = ({
           {label}
         </label>
       )}
-      <input
+      <textarea
         id={id}
-        type={type}
         placeholder={placeholder}
         value={value}
         onChange={(e) => onChange?.(e.target.value)}
-        onKeyDown={onKeyDown}
         disabled={disabled}
+        rows={rows}
         className={`
           px-3 py-2 rounded border text-sm
           ${error ? 'border-red-500' : 'border-gray-300 focus:border-pond-blue'}

@@ -32,4 +32,12 @@ export const notificationConfig: Record<Notification['type'], NotificationTypeCo
     icon: null, // Placeholder for a milestone icon
     getPath: () => '/profile',
   },
+  nudge: {
+    icon: null, // Placeholder for a nudge icon
+    getPath: () => '/goals', // Nudge notifications will direct to the goals page
+  },
+  nudge_response: {
+    icon: null, // Placeholder for a nudge response icon
+    getPath: () => '/goals', // Nudge response notifications will direct to the goals page
+  },
 };

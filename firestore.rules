@@ -46,14 +46,25 @@ service cloud.firestore {
       allow read, write: if request.auth.uid == uid;
     }
     
-    // Notifications - user's own only
+    // Notifications - user can create their own or for their partner, and read their own.
     match /notifications/{notificationId} {
-      allow read, write: if request.auth.uid == resource.data.uid;
+      allow read, update, delete: if request.auth.uid == resource.data.uid;
+      allow create: if request.auth.uid == request.resource.data.uid ||
+                    (request.resource.data.uid in get(/databases/$(database)/documents/couples/$(get(/databases/$(database)/documents/users/$(request.auth.uid)).data.coupleId)).data.userIds);
     }
     
     // Pond Memories - couple can access
     match /pondMemories/{coupleId}/{activityId} {
       allow read, write: if request.auth.uid in get(/databases/$(database)/documents/couples/$(coupleId)).data.userIds;
+    }
+
+    // Goals - only couple members
+    match /goals/{goalId} {
+        // A user can read, update, or delete a goal if they are a member of the couple associated with that goal.
+        allow read, update, delete: if request.auth.uid in get(/databases/$(database)/documents/couples/$(resource.data.coupleId)).data.userIds;
+
+        // A user can create a goal if they are a member of the couple they are assigning the goal to.
+        allow create: if request.auth.uid in get(/databases/$(database)/documents/couples/$(request.resource.data.coupleId)).data.userIds;
     }
 
     // Quack Counts - users can only write their own, but can read their partner's.

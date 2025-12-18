@@ -26,6 +26,14 @@ export const Button = ({
       color: '#000000',
       border: '1px solid #D1D5DB',
     },
+    duckdark:{
+      backgroundColor: '#FFB600',
+      color: 'rgb(50, 50, 50)',
+    },
+    navy:{
+      backgroundColor: '#1C54B0',
+      color: '#FFFFFF',
+    },
     danger: {
       backgroundColor: '#EF4444',
       color: '#FFFFFF',

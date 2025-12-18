@@ -1,11 +1,11 @@
 import { useState } from 'react'
-import { Button, Input, Card } from '../components/ui'
+import { Button, Input } from '../components/ui'
 import { coupleService } from '../firebase/coupleService'
 import { useAuthContext } from '../context/AuthContext'
 import bebekz1Image from '../assets/images/bebekz-1.webp'
 
 export const CoupleLinkingPage = () => {
-  const { user, setUser, signOut } = useAuthContext()
+  const { user, setUser, signOut, setCouple } = useAuthContext()
   const [mode, setMode] = useState<'choose' | 'create' | 'join'>('choose')
   const [coupleCode, setCoupleCode] = useState('')
   const [loading, setLoading] = useState(false)
@@ -27,6 +27,8 @@ export const CoupleLinkingPage = () => {
       setGeneratedCode(inviteCode);
       setNewCoupleId(coupleId);
       setCodeGenerated(true);
+      const newCoupleData = await coupleService.getCoupleData(coupleId);
+      setCouple(newCoupleData);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An error occurred');
     } finally {
@@ -59,6 +61,8 @@ export const CoupleLinkingPage = () => {
       const { coupleId } = await coupleService.joinCoupleByCode(coupleCode, user);
       if (user) {
         setUser({ ...user, coupleId });
+        const newCoupleData = await coupleService.getCoupleData(coupleId);
+        setCouple(newCoupleData);
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An error occurred');
@@ -80,7 +84,7 @@ export const CoupleLinkingPage = () => {
   if (mode === 'choose') {
     return (
       <div className="min-h-screen bg-linear-to-br from-pond-blue-light via-soft-white to-duck-yellow-light flex flex-col items-center justify-center p-4">
-        <Card className="w-full max-w-md">
+        <div className="w-full max-w-md rounded-lg shadow">
           <div className="text-center space-y-6">
             <div>
               <img src={bebekz1Image} className="text-4xl mb-2" />
@@ -112,7 +116,7 @@ export const CoupleLinkingPage = () => {
               You'll need to share an invite code with your partner
             </p>
           </div>
-        </Card>
+        </div>
         <div className="mt-4">
           <Button
             variant="tertiary"
@@ -128,7 +132,7 @@ export const CoupleLinkingPage = () => {
   if (mode === 'create') {
     return (
       <div className="min-h-screen bg-linear-to-br from-pond-blue-light via-soft-white to-duck-yellow-light flex items-center justify-center p-4">
-        <Card className="w-full max-w-md">
+        <div className="w-full max-w-md rounded-lg shadow">
           <div className="space-y-6">
             <div>
               <button
@@ -182,7 +186,7 @@ export const CoupleLinkingPage = () => {
               {codeGenerated ? 'Continue' : 'Generate Code'}
             </Button>
           </div>
-        </Card>
+        </div>
       </div>
     )
   }
@@ -190,7 +194,7 @@ export const CoupleLinkingPage = () => {
   if (mode === 'join') {
     return (
       <div className="min-h-screen bg-linear-to-br from-pond-blue-light via-soft-white to-duck-yellow-light flex items-center justify-center p-4">
-        <Card className="w-full max-w-md">
+        <div className="w-full max-w-md rounded-lg shadow">
           <div className="space-y-6">
             <div>
               <button
@@ -214,7 +218,7 @@ export const CoupleLinkingPage = () => {
                 disabled={loading}
               />
               <p className="text-xs text-gray-500 mt-2">
-                6-character code, uppercase (e.g., DUCK42)
+                8-character code, uppercase (e.g., 09DUCK42)
               </p>
             </div>
 
@@ -241,7 +245,7 @@ export const CoupleLinkingPage = () => {
               Join Couple
             </Button>
           </div>
-        </Card>
+        </div>
       </div>
     )
   }

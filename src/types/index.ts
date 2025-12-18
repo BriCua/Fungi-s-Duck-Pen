@@ -14,6 +14,7 @@ export interface User {
 export interface Couple {
   coupleId: string
   userIds: string[]
+  createdBy: string // Add this line
   createdAt: number
   inviteCode?: string
   inviteCodeExpiry?: number
@@ -70,15 +71,22 @@ export interface QuackzultingMessage {
 export interface Notification {
   notificationId: string
   uid: string
-  type: 'advice_summary' | 'chat' | 'milestone'
-  title: string
-  summary: string
+  type: 'advice_summary' | 'chat' | 'milestone' | 'nudge' | 'nudge_response'
+  title: string // Changed from message to title
+  summary?: string // Added summary property
   suggestedActions?: string[]
   moodEmoji?: string
   fromUid?: string
   timestamp: number
   read: boolean
   sessionId?: string
+  // Nudge specific data
+  data?: {
+    goalId?: string;
+    checklistItemId?: string | null;
+    nudgeMessage?: string;
+    goalTitle?: string;
+  };
 }
 
 // Pond Memories types
@@ -96,7 +104,7 @@ export interface PondMemory {
 // UI Component Props
 export interface ButtonProps {
   children: React.ReactNode
-  variant?: 'primary' | 'secondary' | 'tertiary' | 'danger'
+  variant?: 'primary' | 'secondary' | 'duckdark' | 'navy' | 'tertiary' | 'danger'
   size?: 'sm' | 'md' | 'lg'
   disabled?: boolean
   loading?: boolean
@@ -115,6 +123,7 @@ export interface InputProps {
   error?: string
   label?: string
   className?: string
+  onKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>) => void
 }
 
 export interface CardProps {

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Card } from '../../components/ui';
+
 import { useAuthContext } from '../../context/AuthContext';
 import { subscribeToQuackCount } from '../../firebase/quackService';
 
@@ -34,25 +34,25 @@ export const Stats: React.FC<StatsProps> = () => {
   return (
     <div className="grid grid-cols-3 gap-4 mb-8">
       {/* My Quackz */}
-      <Card className="flex flex-col items-center justify-center p-4 bg-duck-yellow-subtle">
+      <div className="flex flex-col items-center justify-center p-4 bg-duck-yellow-dark rounded-lg shadow">
         <span className="text-4xl mb-2">🦆</span>
         <p className="text-2xl font-bold text-white">{myQuackz}</p>
-        <h3 className="text-xs font-semibold text-yellow-50 mt-1">My Quackz</h3>
-      </Card>
+        <h3 className="text-xs font-semibold text-duck-yellow-light mt-1">My Quackz</h3>
+      </div>
       {/* Our Streak */}
-      <Card className="flex flex-col items-center justify-center p-4 bg-vibrant-orange">
+      <div className="flex flex-col items-center justify-center p-4 bg-vibrant-orange rounded-lg shadow">
         <span className="text-4xl mb-2">🔥</span>
         <p className="text-2xl font-bold text-white">{streak}</p>
         <h3 className="text-xs font-semibold text-orange-100 mt-1">Our Streak</h3>
-      </Card>
+      </div>
       {/* Partner's Quackz */}
-      <Card className="flex flex-col items-center justify-center p-4 bg-duck-yellow-dark">
+      <div className="flex flex-col items-center justify-center p-4 bg-duck-yellow-subtle rounded-lg shadow">
         <span className="text-4xl mb-2">🦆</span>
         <p className="text-2xl font-bold text-white">{partnerQuackz}</p>
-        <h3 className="text-xs font-semibold text-duck-yellow-light mt-1">
+        <h3 className="text-xs font-semibold text-yellow-50 mt-1">
           {partner ? `${partner.displayName}'s Quackz` : "Partner's Quackz"}
         </h3>
-      </Card>
+      </div>
     </div>
   );
 };

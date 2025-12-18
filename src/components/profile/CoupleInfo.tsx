@@ -1,5 +1,5 @@
 import React from 'react';
-import { Card } from '../../components/ui';
+
 import { useAuthContext } from '../../context/AuthContext';
 
 const PencilIcon = ({ onClick }: { onClick: () => void }) => (
@@ -15,7 +15,7 @@ export const CoupleInfo: React.FC<CoupleInfoProps> = ({ onEditRelationshipStatus
   const { couple } = useAuthContext();
 
   return (
-    <Card className="mb-8 p-6 bg-gradient-to-br from-purple-100 to-pink-100 shadow-lg rounded-xl">
+    <div className="mb-8 p-6 bg-gradient-to-br from-purple-100 to-pink-100 shadow-lg rounded-xl rounded-lg shadow">
       <h2 className="text-2xl font-bold text-center text-purple-800 mb-4 font-fredoka">Our Journey</h2>
       {couple ? (
         <div className="space-y-4 text-gray-700 font-baloo2">
@@ -37,6 +37,6 @@ export const CoupleInfo: React.FC<CoupleInfoProps> = ({ onEditRelationshipStatus
       ) : (
         <p className="text-center text-gray-500 font-baloo2">No couple information available.</p>
       )}
-    </Card>
+    </div>
   );
 };

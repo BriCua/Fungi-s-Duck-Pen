@@ -4,13 +4,14 @@
 
 @theme{
     --color-vibrant-orange:#FF8C42;
-    --color-duck-yellow-dark: #FFC700;
+    --color-duck-yellow-dark: #FFB600;
     --color-duck-yellow:#FFD700;
-    --color-duck-yellow-subtle:#ffd580;
+    --color-duck-yellow-subtle:#ffd070;
     --color-duck-yellow-light:#FFF8DC;
     --color-pond-blue:#4A90E2;
+    --color-dark-navy:#1C54B0;
     --color-contrast-pink: #ed5a7c;
-    --color-brighter-pink: rgba(2255,122,162);
+    --color-brighter-pink: rgba(255, 122, 162, 1);
     --color-disabled-grey: #BFBCBC;
     --font-fredoka: 'Fredoka';
     --font-fresca: 'Fresca';

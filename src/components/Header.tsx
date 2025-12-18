@@ -3,7 +3,8 @@ import { Streak } from "./Streak";
 import notifDefault from "../assets/icons/notif-default.webp";
 import notifUnread from "../assets/icons/notif-unread.webp";
 import { useNotifications } from "../hooks/useNotifications";
-import duck from "../assets/icons/duck.webp";
+/* import duck from "../assets/icons/duck.webp"; */
+import quests from "../assets/icons/notes.svg";
 import profile from "../assets/icons/profile.webp";
 import { useNavigate } from "react-router-dom"; // Import useNavigate
 
@@ -34,11 +35,18 @@ const Header: React.FC = () => {
               </span>
             )}
           </button>
-          <button
+        {/*   <button
             className="btn-ripple bg-white/30 backdrop-blur-xs rounded-2xl border border-white/40 shadow-lg w-12 h-12 flex items-center justify-center text-2xl"
             title="Duck?"
           >
             <img src={duck} alt="Duck" className="w-7 h-7" />
+          </button> */}
+          <button
+            onClick={()=>navigate("/goals")}
+            className="btn-ripple bg-white/30 backdrop-blur-xs rounded-2xl border border-white/40 shadow-lg w-12 h-12 flex items-center justify-center text-2xl"
+            title="Quests"
+          >
+            <img src={quests} alt="Quests" className="w-7 h-7" />
           </button>
           <button
             onClick={() => navigate("/profile")}

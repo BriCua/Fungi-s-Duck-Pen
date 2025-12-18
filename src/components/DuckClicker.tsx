@@ -7,11 +7,11 @@ import { useAuthContext } from '../context/AuthContext';
 import { subscribeToQuackCount, incrementQuackCount } from '../firebase/quackService';
 import { Spinner } from './ui/Spinner';
 import Header from './Header'; // Import Header
-import Footer from './Footer'; // Import Footer
+/* import Footer from './Footer'; // Import Footer */
 
 const quacks = [
   "Quackz!", "Quackkk!!!", "quacks?", "Qweeekk!", "Quackers!", 
-  "Quack.", "Quack...", "Quack Quack", "Quack Attack!"
+  "Quack!", "Quack...", "Quack Quack!", "Quackyy!"
 ];
 
 const BATCH_INTERVAL = 2000; // 2 seconds
@@ -34,9 +34,9 @@ const DuckClicker = () => {
   const [isMuted, setIsMuted] = useState(false);
   const [isSpinningGlow, setIsSpinningGlow] = useState(false);
 
-  const isAnimatingRef = useRef(false);
   const duckImgRef = useRef<HTMLImageElement>(null);
   const audioRef = useRef<HTMLAudioElement>(null);
+  const isAnimatingRef = useRef(false);
 
   // Effect to manage all data loading and subscriptions
   useEffect(() => {
@@ -229,7 +229,7 @@ const DuckClicker = () => {
           </button>
         </div>
       </main>
-      <Footer />
+     {/*  <Footer /> */}
     </>
   )
 }

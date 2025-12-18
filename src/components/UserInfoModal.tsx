@@ -19,11 +19,13 @@ interface UserInfoModalProps {
   onSubmit: (data: ProfileData) => void;
   initialDisplayName: string;
   skipText?: string;
+  isPartner: boolean;
 }
 
-const UserInfoModal: React.FC<UserInfoModalProps> = ({ isOpen, onClose, onSubmit, initialDisplayName, skipText }) => {
+export const UserInfoModal: React.FC<UserInfoModalProps> = ({ isOpen, onClose, onSubmit, initialDisplayName, skipText, isPartner }) => {
   const { user } = useAuthContext();
   const [step, setStep] = useState(1);
+  const [error, setError] = useState('');
 
   // Step 1 state
   const [displayName, setDisplayName] = useState(initialDisplayName);
@@ -47,6 +49,7 @@ const UserInfoModal: React.FC<UserInfoModalProps> = ({ isOpen, onClose, onSubmit
   // Fetch existing couple data when modal opens or user changes
   useEffect(() => {
     if (isOpen && user?.coupleId) {
+      setError(''); // Clear error on open
       setIsLoadingCoupleData(true);
       coupleService.getCoupleData(user.coupleId)
         .then(data => {
@@ -69,13 +72,26 @@ const UserInfoModal: React.FC<UserInfoModalProps> = ({ isOpen, onClose, onSubmit
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    setError('');
+
     const birthdate = (birthDay && birthMonth && birthYear)
-      ? new Date(`${birthYear}-${birthMonth}-${birthDay}`)
+      ? new Date(Number(birthYear), Number(birthMonth) - 1, Number(birthDay))
       : null;
     
+    // Check if the date components were provided but resulted in an invalid date
+    if (birthDay && birthMonth && birthYear && birthdate && (isNaN(birthdate.getTime()) || birthdate.getDate() !== Number(birthDay))) {
+      setError('Please enter a valid birthdate.');
+      return;
+    }
+    
     const anniversary = (anniversaryDay && anniversaryMonth && anniversaryYear)
-      ? new Date(`${anniversaryYear}-${anniversaryMonth}-${anniversaryDay}`)
+      ? new Date(Number(anniversaryYear), Number(anniversaryMonth) - 1, Number(anniversaryDay))
       : null;
+      
+    if (!isPartner && anniversaryDay && anniversaryMonth && anniversaryYear && anniversary && (isNaN(anniversary.getTime()) || anniversary.getDate() !== Number(anniversaryDay))) {
+        setError('Please enter a valid anniversary date.');
+        return;
+    }
 
     onSubmit({
       displayName,
@@ -95,7 +111,7 @@ const UserInfoModal: React.FC<UserInfoModalProps> = ({ isOpen, onClose, onSubmit
   const relationshipStatuses = ["Dating", "Engaged", "Married", "It's Complicated"];
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} cancelText={skipText || 'Skip'} title={step === 1 ? "About You (1/2)" : "About Your Relationship (2/2)"}>
+    <Modal isOpen={isOpen} onClose={onClose} cancelText={skipText || 'Skip'} title={isPartner ? "About You" : (step === 1 ? "About You (1/2)" : "About Your Relationship (2/2)")}>
       <div className="p-6">
         <form onSubmit={handleSubmit}>
           {step === 1 && (
@@ -121,13 +137,18 @@ const UserInfoModal: React.FC<UserInfoModalProps> = ({ isOpen, onClose, onSubmit
                   </select>
                 </div>
               </div>
-              <div className="flex justify-end">
-                <Button type="button" onClick={() => setStep(2)}>Next</Button>
+              {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
+              <div className="flex justify-end mt-4">
+                {isPartner ? (
+                  <Button type="submit">Save and Continue</Button>
+                ) : (
+                  <Button type="button" onClick={() => setStep(2)}>Next</Button>
+                )}
               </div>
             </>
           )}
 
-          {step === 2 && (
+          {!isPartner && step === 2 && (
             <>
               {isLoadingCoupleData ? <p>Loading...</p> : <>
                 <div className="mb-4">
@@ -162,7 +183,9 @@ const UserInfoModal: React.FC<UserInfoModalProps> = ({ isOpen, onClose, onSubmit
                 </div>
               </>}
 
-              <div className="flex justify-between">
+              {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
+              
+              <div className="flex justify-between mt-4">
                 <Button type="button" variant="secondary" onClick={() => setStep(1)}>Back</Button>
                 <Button type="submit">Save and Continue</Button>
               </div>
@@ -174,4 +197,5 @@ const UserInfoModal: React.FC<UserInfoModalProps> = ({ isOpen, onClose, onSubmit
   );
 };
 
-export default UserInfoModal;
+// Removed the extra closing parenthesis here
+// export default UserInfoModal; // No default export
