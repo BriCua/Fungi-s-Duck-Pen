@@ -20,17 +20,17 @@ export const CoupleInfo: React.FC<CoupleInfoProps> = ({ onEditRelationshipStatus
       {couple ? (
         <div className="space-y-4 text-gray-700 font-baloo2">
           <div> {/* Container for Relationship Status */}
-            <p className="font-semibold text-purple-700 mb-1">Relationship Status:</p>
+            <p className="font-semibold text-purple-700 mb-1 text-lg">Relationship Status:</p>
             <div className="flex items-center">
               <PencilIcon onClick={() => onEditRelationshipStatus(couple.relationshipStatus || '')} />
-              <p className="text-lg">{couple.relationshipStatus || 'Not set'}</p>
+              <p className="text-md font-fresca">{couple.relationshipStatus || 'Not set'}</p>
             </div>
           </div>
           <div> {/* Container for Our Story */}
-            <p className="font-semibold text-purple-700 mb-1">Our Story:</p>
+            <p className="font-semibold text-purple-700 mb-1 text-lg">Our Story:</p>
             <div className="flex items-start"> {/* Use items-start for multiline text */}
               <PencilIcon onClick={() => onEditMeetStory(couple.meetStory || '')} />
-              <p className="whitespace-pre-wrap text-lg">{couple.meetStory || 'No story yet. Share your journey!'}</p>
+              <p className="whitespace-pre-wrap text-md font-fresca">{couple.meetStory || 'No story yet. Share your journey!'}</p>
             </div>
           </div>
         </div>
