@@ -128,7 +128,7 @@ export const SpecialDates: React.FC<SpecialDatesProps> = ({ couple, onAddSpecial
   const dates = [...recurringDates, ...nonRecurringDates];
 
   return (
-    <div className="mb-8 p-6 bg-gradient-to-br from-blue-100 to-green-100 shadow-lg rounded-xl rounded-lg shadow">
+    <div className="mb-8 p-6 bg-gradient-to-br from-blue-100 to-green-100 shadow rounded-lg">
       <h2 className="text-2xl font-bold text-center text-blue-800 mb-4 font-fredoka">Special Dates</h2>
       <div className="space-y-4">
         {dates.length > 0 ? (

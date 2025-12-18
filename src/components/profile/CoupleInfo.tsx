@@ -15,7 +15,7 @@ export const CoupleInfo: React.FC<CoupleInfoProps> = ({ onEditRelationshipStatus
   const { couple } = useAuthContext();
 
   return (
-    <div className="mb-8 p-6 bg-gradient-to-br from-purple-100 to-pink-100 shadow-lg rounded-xl rounded-lg shadow">
+    <div className="mb-8 p-6 bg-linear-to-br from-purple-100 to-pink-100 rounded-lg shadow">
       <h2 className="text-2xl font-bold text-center text-purple-800 mb-4 font-fredoka">Our Journey</h2>
       {couple ? (
         <div className="space-y-4 text-gray-700 font-baloo2">

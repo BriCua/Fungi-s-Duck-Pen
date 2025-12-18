@@ -12,6 +12,7 @@ dist
 dist-ssr
 *.local
 .env
+curr_error.txt
 
 # Editor directories and files
 .vscode/*

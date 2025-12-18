@@ -1,3 +1,1 @@
-handleSaveSpecialDate called.
-ProfilePage.tsx:43 Couple object: {inviteCode: '8L4B52P4', meetStory: 'i dont know', createdBy: 'LvFIodskdSOYkjgA4GvktK2vk102', updatedAt: 1765021188031, anniversary: 1614618000000, …}
-ProfilePage.tsx:44 Couple ID: undefined
+Below are errors listed in the browser console:

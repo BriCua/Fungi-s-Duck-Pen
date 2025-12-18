@@ -80,7 +80,7 @@ While much has been accomplished, there are several exciting features planned fo
 
 *   **Complete the Notifications Page:**
     *   Build out the Firebase service (`notificationService.ts`) to manage notification data.
-    *   Create a `useNotifications` hook for application-wide state management.
+*   Create a `useNotifications` hook for application-wide state management.
     *   Develop the `NotificationsPage.tsx` component to display, manage, and interact with notifications.
     *   Integrate real-time unread counts into the header.
 *   **Profile Photo Uploads:**
