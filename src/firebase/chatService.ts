@@ -7,7 +7,7 @@ import {
   addDoc, 
   updateDoc,
 } from 'firebase/firestore'
-import type { ChatMessage } from '../types'
+import type { ChatMessage } from '../types/chat'
 
 export const chatService = {
   // Listen to couple's chat messages in real-time

@@ -11,7 +11,7 @@ import {
 } from 'firebase/auth'
 import { db } from './init'
 import { doc, setDoc, getDoc, updateDoc } from 'firebase/firestore'
-import type { User } from '../types'; // Import User type
+import type { User } from '../types/user'; // Import User type
 
 export const authService = {
   // Sign up with email/password

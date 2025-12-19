@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import type { ChatMessage } from '../types'
+import type { ChatMessage } from '../types/chat'
 
 export const useChat = (coupleId: string | null) => {
   const [messages] = useState<ChatMessage[]>([])

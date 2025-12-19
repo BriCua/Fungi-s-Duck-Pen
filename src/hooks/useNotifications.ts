@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { notificationService } from '../firebase/notificationService';
-import type { Notification } from '../types';
+import type { Notification } from '../types/notification';
 import { useAuthContext } from '../context/AuthContext'; // To get the current user's UID
 
 export const useNotifications = () => {

@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useAuthContext } from '../context/AuthContext';
 import { quackzultingService } from '../firebase/quackzultingService';
-import type { QuackzultingMessage } from '../types';
+import type { QuackzultingMessage } from '../types/quackzulting';
 import { ChatBubble } from '../components/ChatBubble';
 import { ChatInput } from '../components/ChatInput';
 import { Spinner } from '../components/ui';

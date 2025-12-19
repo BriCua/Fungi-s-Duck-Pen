@@ -1,6 +1,7 @@
 import { collection, addDoc, query, where, getDocs, updateDoc, doc, arrayUnion, Timestamp, getDoc } from 'firebase/firestore';
 import { db } from './init';
-import type { User, Couple, SpecialDate } from '../types';
+import type { Couple, SpecialDate } from '../types/couple';
+import type { User } from '../types/user';
 
 const generateInviteCode = (length = 8) => {
   const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';

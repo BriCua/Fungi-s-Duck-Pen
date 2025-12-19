@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
 import { authService } from '../firebase/authService';
 import { coupleService } from '../firebase/coupleService';
-import type { User, Couple } from '../types';
+import type { Couple } from '../types/couple';
+import type { User } from '../types/user';
 import { doc, getDoc } from 'firebase/firestore';
 import { db } from '../firebase/init';
 

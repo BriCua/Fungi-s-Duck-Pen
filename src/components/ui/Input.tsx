@@ -1,4 +1,4 @@
-import type { InputProps } from '../../types'
+import type { InputProps } from '../../types/ui'
 
 export const Input = ({
   id,

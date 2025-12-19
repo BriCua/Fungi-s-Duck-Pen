@@ -5,7 +5,7 @@ import {
   query,
   onSnapshot,
 } from 'firebase/firestore'
-import type { QuackzultingMessage } from '../types'
+import type { QuackzultingMessage } from '../types/quackzulting'
 import { aiService } from '../services/aiService'
 
 export const quackzultingService = {

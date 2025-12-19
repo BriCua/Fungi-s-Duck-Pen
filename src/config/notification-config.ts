@@ -1,5 +1,5 @@
 import React from 'react';
-import type { Notification } from '../types';
+import type { Notification } from '../types/notification';
 
 /**
  * Defines the shape of the configuration for a single notification type.

@@ -9,7 +9,7 @@ import DuckClicker from "./components/DuckClicker";
 import { UserInfoModal, type ProfileData } from "./components/UserInfoModal";
 import { authService } from "./firebase/authService";
 import { coupleService } from "./firebase/coupleService";
-import type { User } from "./types";
+import type { User } from "./types/user";
 import { ProfilePage } from "./pages/ProfilePage";
 import { Routes, Route, Navigate } from "react-router-dom"; // Import Routes, Route, Navigate
 import ProtectedRoute from "./components/ProtectedRoute"; // Import ProtectedRoute

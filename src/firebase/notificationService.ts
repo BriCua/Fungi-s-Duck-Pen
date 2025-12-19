@@ -1,6 +1,6 @@
 import { collection, query, where, onSnapshot, doc, updateDoc, getDocs, deleteDoc, orderBy, addDoc, serverTimestamp, writeBatch } from 'firebase/firestore';
 import { db } from './init';
-import type { Notification } from '../types';
+import type { Notification } from '../types/notification';
 
 export const notificationService = {
   createNotification: async (uid: string, type: Notification['type'], title: string, summary?: string, data?: Record<string, any>) => {

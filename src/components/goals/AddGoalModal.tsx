@@ -6,7 +6,7 @@ import { Modal } from '../ui/Modal';
 import { Input } from '../ui/Input';
 import { Textarea } from '../ui/Textarea';
 import type { Goal, GoalType, ChecklistItem } from '../../types/goals';
-import type { Couple } from '../../types';
+import type { Couple } from '../../types/couple';
 import crossCloseIcon from '../../assets/icons/cross-close.svg';
 
 

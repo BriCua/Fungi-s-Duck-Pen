@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Modal, Input, Button } from '../../components/ui';
-import type { SpecialDate } from '../../types';
+import type { SpecialDate } from '../../types/couple';
 
 interface UpdateSpecialDateModalProps {
   isOpen: boolean;

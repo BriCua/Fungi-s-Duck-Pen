@@ -1,6 +1,6 @@
 import  { useEffect } from 'react'; // Import useEffect
 import ReactDOM from 'react-dom'; // Import ReactDOM
-import type { ModalProps } from '../../types'
+import type { ModalProps } from '../../types/ui'
 
 export const Modal = ({
   isOpen,

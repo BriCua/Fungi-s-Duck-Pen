@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useAuthContext } from '../context/AuthContext';
 import { chatService } from '../firebase/chatService';
-import type { ChatMessage } from '../types';
+import type { ChatMessage } from '../types/chat';
 import { ChatBubble } from '../components/ChatBubble';
 import { ChatInput } from '../components/ChatInput';
 import { Spinner } from '../components/ui';

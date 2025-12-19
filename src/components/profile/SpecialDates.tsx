@@ -1,6 +1,6 @@
 import React from 'react';
 import { Button } from '../../components/ui';
-import type { Couple, SpecialDate } from '../../types';
+import type { Couple, SpecialDate } from '../../types/couple';
 
 interface SpecialDatesProps {
   couple: Couple | null;

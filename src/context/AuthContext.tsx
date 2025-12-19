@@ -1,6 +1,7 @@
 import React, { createContext, useContext } from 'react'
 import { useAuth } from '../hooks/useAuth'
-import type { User, Couple } from '../types'
+import type { Couple } from '../types/couple'
+import type { User } from '../types/user'
 
 interface AuthContextType {
   user: User | null

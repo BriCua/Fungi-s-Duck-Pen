@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { formatDistanceToNow } from 'date-fns';
-import type { Notification } from '../../types';
+import type { Notification } from '../../types/notification';
 import { useNotifications } from '../../hooks/useNotifications';
 import { notificationConfig } from '../../config/notification-config';
 import NudgeResponseModal from './NudgeResponseModal';

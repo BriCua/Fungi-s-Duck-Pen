@@ -9,7 +9,7 @@ import { SpecialDates } from '../components/profile/SpecialDates';
 import { AddSpecialDateModal } from '../components/profile/AddSpecialDateModal';
 import { UpdateSpecialDateModal } from '../components/profile/UpdateSpecialDateModal';
 import { EditFieldModal } from '../components/profile/EditFieldModal';
-import type { SpecialDate } from '../types';
+import type { SpecialDate } from '../types/couple';
 import { PageHeader } from '../components/ui/PageHeader';
 
 export const ProfilePage: React.FC = () => {

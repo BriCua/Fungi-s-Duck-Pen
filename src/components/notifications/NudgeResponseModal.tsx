@@ -4,7 +4,7 @@ import { Button } from '../ui/Button';
 import { Textarea } from '../ui/Textarea';
 import { useAuthContext } from '../../context/AuthContext';
 import { useGoals } from '../../hooks/useGoals';
-import type { Notification } from '../../types';
+import type { Notification } from '../../types/notification';
 
 interface NudgeResponseModalProps {
   notification: Notification;
