@@ -19,6 +19,8 @@ export interface Goal {
   details?: string;
   priority?: GoalPriority;
   checklist: ChecklistItem[];
+  done?: boolean;
+  isArchived?: boolean;
   createdAt: Timestamp;
   updatedAt: Timestamp;
 }

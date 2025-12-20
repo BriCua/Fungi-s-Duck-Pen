@@ -9,8 +9,8 @@ const NotificationsPage: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="flex justify-center items-center h-screen">
-        <Spinner />
+      <div className="flex justify-center items-center flex-1">
+        <Spinner size="lg" />
       </div>
     );
   }

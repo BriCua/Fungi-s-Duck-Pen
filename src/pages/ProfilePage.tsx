@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Button } from '../components/ui';
 import { useAuthContext } from '../context/AuthContext';
 import { coupleService } from '../firebase/coupleService';
+import { Spinner } from '../components/ui/Spinner';
 import { AboutHeader } from '../components/profile/AboutHeader';
 import { Stats } from '../components/profile/Stats';
 import { CoupleInfo } from '../components/profile/CoupleInfo';
@@ -149,8 +150,8 @@ export const ProfilePage: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <p>Loading Profile...</p>
+      <div className="flex justify-center items-center flex-1">
+        <Spinner size="lg" />
       </div>
     );
   }

@@ -1,6 +1,7 @@
-import  { useEffect } from 'react'; // Import useEffect
-import ReactDOM from 'react-dom'; // Import ReactDOM
-import type { ModalProps } from '../../types/ui'
+import { useEffect } from 'react';
+import ReactDOM from 'react-dom';
+import type { ModalProps } from '../../types/ui';
+import { Button } from './Button'; // Import the custom Button component
 
 export const Modal = ({
   isOpen,
@@ -11,9 +12,9 @@ export const Modal = ({
   confirmText = 'Confirm',
   cancelText = 'Cancel',
   variant = 'info',
+  isLoading = false, // Added isLoading prop with a default value
 }: ModalProps) => {
   useEffect(() => {
-    // Create element to portal into
     const el = document.createElement('div');
     document.body.appendChild(el);
 
@@ -28,7 +29,7 @@ export const Modal = ({
     info: 'border-blue-500',
     warning: 'border-yellow-500',
     danger: 'border-red-500',
-  }
+  };
 
   return ReactDOM.createPortal(
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
@@ -39,24 +40,27 @@ export const Modal = ({
             {children}
           </div>
           <div className="flex gap-3 justify-end">
-            <button
+            <Button
               onClick={onClose}
-              className="px-4 py-2 rounded-lg bg-gray-200 text-black hover:bg-gray-300 transition-colors"
+              variant="tertiary"
+              className="bg-gray-200 text-black hover:bg-gray-300"
             >
               {cancelText}
-            </button>
+            </Button>
             {onConfirm && (
-              <button
+              <Button
                 onClick={onConfirm}
-                className="px-4 py-2 rounded-lg bg-pond-blue text-white hover:bg-pond-blue-dark transition-colors"
+                loading={isLoading}
+                variant="secondary"
+                className="bg-pond-blue text-white hover:bg-pond-blue-dark"
               >
                 {confirmText}
-              </button>
+              </Button>
             )}
           </div>
         </div>
       </div>
     </div>,
-    document.body // Render directly into body
-  )
-}
+    document.body
+  );
+};

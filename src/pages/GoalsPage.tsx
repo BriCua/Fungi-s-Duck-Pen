@@ -12,14 +12,20 @@ const GoalsPage = () => {
   const { user, couple, partner } = useAuthContext();
   const [isAddModalOpen, setAddModalOpen] = useState(false);
   const [filter, setFilter] = useState<'all' | 'us' | 'my' | 'partner'>('all');
+  const [showArchived, setShowArchived] = useState(false);
   const [isFilterOpen, setIsFilterOpen] = useState(false);
 
   const filteredGoals = goals.filter(goal => {
-    if (filter === 'all') return true;
-    if (filter === 'us') return goal.type === 'us';
-    if (filter === 'my') return goal.type === 'personal' && goal.createdBy === user?.uid;
-    if (filter === 'partner') return goal.type === 'personal' && goal.createdBy === partner?.uid;
-    return true;
+    const filterPasses = (
+      filter === 'all' ||
+      (filter === 'us' && goal.type === 'us') ||
+      (filter === 'my' && goal.type === 'personal' && goal.createdBy === user?.uid) ||
+      (filter === 'partner' && goal.type === 'personal' && goal.createdBy === partner?.uid)
+    );
+    
+    if (!filterPasses) return false;
+
+    return showArchived ? true : !goal.isArchived;
   });
 
   const getGoalOwnership = (goal: Goal) => {
@@ -46,13 +52,22 @@ const GoalsPage = () => {
           {partner && (
             <button onClick={() => { setFilter('partner'); setIsFilterOpen(false); }} className="block w-full text-left px-4 py-2 text-gray-800 hover:bg-gray-200">{`${partner.displayName}'s Quests`}</button>
           )}
+          <div className="border-t border-gray-200 my-1"></div>
+            <button onClick={() => setShowArchived(!showArchived)} className="w-full text-left px-4 py-2 text-gray-800 hover:bg-gray-200 flex items-center justify-between">
+              <span>Show Completed</span>
+              {showArchived && <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" /></svg>}
+            </button>
         </div>
       )}
     </div>
   );
 
   if (loading) {
-    return <div className="flex justify-center items-center h-full"><Spinner /></div>;
+    return (
+      <div className="flex justify-center items-center flex-1">
+        <Spinner size="lg" />
+      </div>
+    );
   }
 
   return (

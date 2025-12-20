@@ -1,13 +1,19 @@
+import bebekz1 from '../../assets/images/bebekz-1.webp';
+
 export const Spinner = ({ size = 'md', className = '' }: { size?: 'sm' | 'md' | 'lg', className?: string }) => {
   const sizeClasses = {
-    sm: 'w-4 h-4',
-    md: 'w-8 h-8',
-    lg: 'w-12 h-12',
+    sm: 'w-10 h-10',
+    md: 'w-16 h-16',
+    lg: 'w-24 h-24',
   }
 
   return (
     <div className={`flex items-center justify-center ${className}`}>
-      <div className={`${sizeClasses[size]} border-4 border-duck-yellow border-t-pond-blue rounded-full animate-spin`} />
+      <img
+        src={bebekz1}
+        alt="Loading..."
+        className={`${sizeClasses[size]} animate-subtle-float`}
+      />
     </div>
   )
 }

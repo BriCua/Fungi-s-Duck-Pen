@@ -15,3 +15,16 @@
 .flame-glow{
     filter: drop-shadow(0 0 2px rgba(255, 255, 255, 0.414)) drop-shadow(0 0 4px rgba(255, 255, 255, 0.253));
 }
+
+@keyframes subtle-float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+.animate-subtle-float {
+  animation: subtle-float 2s ease-in-out infinite;
+}

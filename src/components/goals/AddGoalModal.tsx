@@ -21,7 +21,9 @@ const AddGoalModal = ({ onClose, couple }: AddGoalModalProps) => {
   const [details, setDetails] = useState('');
   const [dueDate, setDueDate] = useState('');
   const [type, setType] = useState<GoalType>('us');
-  const [checklist, setChecklist] = useState<string[]>(['']); // Changed state
+  const [checklist, setChecklist] = useState<string[]>(['']);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState('');
 
   const handleChecklistChange = (index: number, value: string) => {
     const updatedChecklist = [...checklist];
@@ -39,11 +41,18 @@ const AddGoalModal = ({ onClose, couple }: AddGoalModalProps) => {
   };
   
   const handleSubmit = async () => {
-    if (!title || !dueDate || !user || !couple?.coupleId) {
-      console.error("Client-side validation failed: Missing required fields (title, dueDate, user, or couple).");
+    if (!title || !dueDate) {
+      setError('Please fill out all required fields: Title and Due Date.');
+      return;
+    }
+     if (!user || !couple?.coupleId) {
+      setError('Error: You must be in a couple to create a goal.');
       return;
     }
     
+    setError('');
+    setIsSubmitting(true);
+
     const finalChecklist: ChecklistItem[] = checklist
       .filter(text => text.trim() !== '')
       .map(text => ({ id: `temp-${Math.random()}`, text, completed: false }));
@@ -56,6 +65,7 @@ const AddGoalModal = ({ onClose, couple }: AddGoalModalProps) => {
       checklist: finalChecklist,
       coupleId: couple.coupleId,
       createdBy: user.uid,
+      ...(finalChecklist.length === 0 && { done: false }),
     };
 
     try {
@@ -63,6 +73,9 @@ const AddGoalModal = ({ onClose, couple }: AddGoalModalProps) => {
       onClose();
     } catch (error) {
       console.error("Error calling createGoal in modal:", error);
+      setError('There was an error creating the quest. Please try again.');
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -73,8 +86,10 @@ const AddGoalModal = ({ onClose, couple }: AddGoalModalProps) => {
       onConfirm={handleSubmit}
       title="Add a New Duck Quest"
       confirmText="Add Quest"
+      isLoading={isSubmitting}
     >
       <div className="space-y-6 font-baloo">
+        {error && <div className="p-3 bg-red-100 border border-red-400 text-red-700 rounded-md">{error}</div>}
         <div className="flex items-center space-x-4">
             <label htmlFor="title" className="text-lg font-semibold font-fredoka text-gray-700">Title:</label>
             <Input

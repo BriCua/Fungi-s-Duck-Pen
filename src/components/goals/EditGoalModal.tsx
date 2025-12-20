@@ -19,6 +19,8 @@ const EditGoalModal = ({ goal, onClose }: EditGoalModalProps) => {
   const [dueDate, setDueDate] = useState(goal.dueDate.toDate().toISOString().split('T')[0]);
   const [type, setType] = useState<GoalType>(goal.type);
   const [checklist, setChecklist] = useState<string[]>(goal.checklist ? goal.checklist.map(item => item.text) : ['']);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState('');
 
   const handleChecklistChange = (index: number, value: string) => {
     const updatedChecklist = [...checklist];
@@ -37,9 +39,12 @@ const EditGoalModal = ({ goal, onClose }: EditGoalModalProps) => {
 
   const handleSubmit = async () => {
     if (!title || !dueDate) {
-      console.error("Missing required fields");
+      setError('Please fill out all required fields: Title and Due Date.');
       return;
     }
+
+    setError('');
+    setIsSubmitting(true);
 
     const finalChecklist: ChecklistItem[] = checklist
       .filter(text => text.trim() !== '')
@@ -60,10 +65,17 @@ const EditGoalModal = ({ goal, onClose }: EditGoalModalProps) => {
       checklist: finalChecklist,
     };
 
-    if(goal.id) {
-      await updateGoal(goal.id, updatedData);
+    try {
+      if(goal.id) {
+        await updateGoal(goal.id, updatedData);
+      }
+      onClose();
+    } catch (err) {
+      setError('There was an error saving the quest. Please try again.');
+      console.error(err);
+    } finally {
+      setIsSubmitting(false);
     }
-    onClose();
   };
 
   return (
@@ -73,8 +85,10 @@ const EditGoalModal = ({ goal, onClose }: EditGoalModalProps) => {
       onConfirm={handleSubmit}
       title="Edit Duck Quest"
       confirmText="Save Changes"
+      isLoading={isSubmitting}
     >
       <div className="space-y-6 font-baloo">
+        {error && <div className="p-3 bg-red-100 border border-red-400 text-red-700 rounded-md">{error}</div>}
         <div className="flex items-center space-x-4">
             <label htmlFor="title" className="text-lg font-semibold font-fredoka text-gray-700">Title:</label>
             <Input

@@ -10,9 +10,10 @@ interface ChecklistProps {
     iconColor: string;
     cardColor: string;
   };
+  isArchived?: boolean;
 }
 
-const Checklist = ({ goal, cardTheme }: ChecklistProps) => {
+const Checklist = ({ goal, cardTheme, isArchived }: ChecklistProps) => {
   const { user } = useAuthContext();
   const { updateGoal } = useGoals();
 
@@ -30,7 +31,7 @@ const Checklist = ({ goal, cardTheme }: ChecklistProps) => {
     }
   };
 
-  const isChecklistDisabled = goal.type === 'personal' && user?.uid !== goal.createdBy;
+  const isChecklistDisabled = (goal.type === 'personal' && user?.uid !== goal.createdBy) || isArchived;
 
   return (
     <div className="space-y-2">

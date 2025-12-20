@@ -15,7 +15,7 @@ export const Button = ({
   const variantStyles: Record<string, React.CSSProperties> = {
     primary: {
       backgroundColor: '#FFD700',
-      color: '#000000',
+      color: '#FFF8DC',
     },
     secondary: {
       backgroundColor: '#4A90E2',
