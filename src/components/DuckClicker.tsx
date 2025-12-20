@@ -194,7 +194,7 @@ const DuckClicker = () => {
             {isLoading ? (
               <Spinner size="lg" />
             ) : (
-              <span>{combinedTotal} <span className='text-3xl'>Total Quacks!</span></span>
+              <span>{combinedTotal} <span className='text-3xl'> Quacks!</span></span>
             )}
           </div>
           
