@@ -13,6 +13,7 @@ dist-ssr
 *.local
 .env
 curr_error.txt
+.firebase
 
 # Editor directories and files
 .vscode/*
