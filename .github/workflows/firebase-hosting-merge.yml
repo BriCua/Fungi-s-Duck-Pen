@@ -11,7 +11,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Create .env file
+      - name: Validate required secrets
+        run: |
+          if [ -z "${{ secrets.FIREBASE_SERVICE_ACCOUNT_FUNGI_S_DUCK_PEN }}" ]; then echo "Missing secret: FIREBASE_SERVICE_ACCOUNT_FUNGI_S_DUCK_PEN"; exit 1; fi
+          if [ -z "${{ secrets.VITE_FIREBASE_PROJECT_ID }}" ]; then echo "Missing secret: VITE_FIREBASE_PROJECT_ID"; exit 1; fi
+          if [ -z "${{ secrets.VITE_FIREBASE_API_KEY }}" ]; then echo "Missing secret: VITE_FIREBASE_API_KEY"; exit 1; fi
+          if [ -z "${{ secrets.VITE_FIREBASE_AUTH_DOMAIN }}" ]; then echo "Missing secret: VITE_FIREBASE_AUTH_DOMAIN"; exit 1; fi
+      - name: Create .env file for build
         run: |
           echo "VITE_FIREBASE_API_KEY=${{ secrets.VITE_FIREBASE_API_KEY }}" >> .env
           echo "VITE_FIREBASE_AUTH_DOMAIN=${{ secrets.VITE_FIREBASE_AUTH_DOMAIN }}" >> .env
@@ -19,10 +25,12 @@ jobs:
           echo "VITE_FIREBASE_STORAGE_BUCKET=${{ secrets.VITE_FIREBASE_STORAGE_BUCKET }}" >> .env
           echo "VITE_FIREBASE_MESSAGING_SENDER_ID=${{ secrets.VITE_FIREBASE_MESSAGING_SENDER_ID }}" >> .env
           echo "VITE_FIREBASE_APP_ID=${{ secrets.VITE_FIREBASE_APP_ID }}" >> .env
-      - run: npm ci && npm run build
-      - uses: FirebaseExtended/action-hosting-deploy@v0
+      - name: Install dependencies and build
+        run: npm ci && npm run build
+      - name: Deploy to Firebase Hosting
+        uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: ${{ secrets.GITHUB_TOKEN }}
           firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_FUNGI_S_DUCK_PEN }}
           channelId: live
-          projectId: fungi-s-duck-pen
+          projectId: ${{ secrets.VITE_FIREBASE_PROJECT_ID }}
