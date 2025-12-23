@@ -9,6 +9,7 @@ import {
   where,
   Timestamp,
   serverTimestamp,
+  runTransaction,
 } from 'firebase/firestore';
 import { db } from './init';
 import { notificationService } from './notificationService';
@@ -106,20 +107,29 @@ export const sendNudgeResponseNotification = async (
 };
 
 // 7. Update Checklist from Nudge Response
-export const updateChecklistFromNudge = async () => {
-    // This is tricky. We need to read the doc, update the checklist, and write it back.
-    // This should be done in a transaction for safety.
-    // For now, a simple update will be used. A more robust solution might be needed.
-    
-    // As we don't have the goal object here, we can't just update the checklist.
-    // This function will likely need to be called from a place where the goal object is available.
-    // Or we need to fetch the goal here, which is not ideal.
-    
-    // Let's assume for now this logic will be handled in the component that calls this,
-    // and this function will just update the goal with the new checklist.
-    
-    // The logic to find and update the specific checklist item will be complex here without the goal object.
-    // Let's leave this as a placeholder and implement it in the hook `useGoals.ts`
-    // which will have access to the goal's state.
-    console.warn("updateChecklistFromNudge requires the full goal object to perform an update. This logic should be handled in the calling hook or component.");
+
+// Transactional update for checklist items to avoid lost updates from concurrent clients.
+export const updateChecklistFromNudge = async (
+  goalId: string,
+  checklistItemId: string | null,
+  completed = true,
+) => {
+  const goalRef = doc(db, goalsCollection, goalId);
+
+  await runTransaction(db, async (tx) => {
+    const snap = await tx.get(goalRef);
+    if (!snap.exists()) throw new Error('Goal not found');
+    const data = snap.data() as any;
+    const checklist = Array.isArray(data.checklist) ? data.checklist : [];
+
+    const updatedChecklist = checklist.map((item: any) => {
+      if (!checklistItemId) return { ...item, completed };
+      return item.id === checklistItemId ? { ...item, completed } : item;
+    });
+
+    tx.update(goalRef, {
+      checklist: updatedChecklist,
+      updatedAt: serverTimestamp(),
+    });
+  });
 };
