@@ -6,6 +6,7 @@ import {
   deleteGoal,
   sendNudgeNotification,
   sendNudgeResponseNotification,
+  updateChecklistFromNudge as updateChecklistFromNudgeService,
 } from '../firebase/goalService';
 import type { Goal } from '../types/goals';
 import { useAuthContext } from '../context/AuthContext';
@@ -51,15 +52,21 @@ export const useGoals = () => {
 
     let updatedChecklist;
     if (checklistItemId) {
-        updatedChecklist = goal.checklist.map(item =>
-            item.id === checklistItemId ? { ...item, completed: true } : item
-        );
+      updatedChecklist = goal.checklist.map(item =>
+        item.id === checklistItemId ? { ...item, completed: true } : item
+      );
     } else {
-        // If no specific item is nudged, mark all as complete
-        updatedChecklist = goal.checklist.map(item => ({ ...item, completed: true }));
+      updatedChecklist = goal.checklist.map(item => ({ ...item, completed: true }));
     }
-    
-    await updateGoal(goalId, { checklist: updatedChecklist });
+
+    // Optimistic UI update
+    setGoals(prev => prev.map(g => g.id === goalId ? { ...g, checklist: updatedChecklist } : g));
+
+    try {
+      await updateChecklistFromNudgeService(goalId, checklistItemId, true);
+    } catch (err) {
+      console.error('updateChecklistFromNudge: transaction failed, reload will reconcile', err);
+    }
   };
 
   return {
