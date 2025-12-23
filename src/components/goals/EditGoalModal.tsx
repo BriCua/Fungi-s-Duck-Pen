@@ -111,7 +111,7 @@ const EditGoalModal = ({ goal, onClose }: EditGoalModalProps) => {
           onChange={setDueDate}
         />
         <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2 font-fredoka">Goal Type</label>
+            <label className="block text-sm font-medium text-gray-700 mb-2 font-fredoka">Who's Quest</label>
             <div className="flex rounded-md shadow-sm">
                 <button
                     type="button"

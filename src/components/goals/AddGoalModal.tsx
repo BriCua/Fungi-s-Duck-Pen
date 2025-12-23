@@ -114,21 +114,21 @@ const AddGoalModal = ({ onClose, couple }: AddGoalModalProps) => {
           onChange={setDueDate}
         />
         <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2 font-fredoka">Goal Type</label>
+            <label className="block text-sm font-medium text-gray-700 mb-2 font-fredoka">Who's Quest</label>
             <div className="flex rounded-md shadow-sm">
                 <button
                     type="button"
                     onClick={() => setType('us')}
                     className={`px-4 py-2 text-sm font-semibold rounded-l-md transition-colors w-1/2 ${type === 'us' ? 'bg-brighter-pink text-pink-50' : 'bg-gray-200 text-gray-600'}`}
                 >
-                    For Us
+                    Our Quest
                 </button>
                 <button
                     type="button"
                     onClick={() => setType('personal')}
                     className={`px-4 py-2 text-sm font-semibold rounded-r-md transition-colors w-1/2 ${type === 'personal' ? 'bg-duck-yellow-dark text-yellow-50' : 'bg-gray-200 text-gray-600'}`}
                 >
-                    For Me
+                    My Quest
                 </button>
             </div>
         </div>
